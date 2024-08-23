@@ -4,19 +4,21 @@
 from player import player
 
 # define chunks
-class chunk:
+class Chunk:
     def __init__(self, chunkContent):
     self.chunkContent = chunkContent
 
-class solide:
-    def __init__(self, form, position, isSolide)
+class Solide:
+    def __init__(self, form, position, walkable, texture)
     self.form = form
     self.position = form
-    self.isSolide = isSolide
+    self.walkable = walkable
+    self.texture = texture
 
-class entity(solide):
+class Entity(Solide):
     def __init__(self)
 
-class player:
+class Player(Entity):
     def __init__(self, health)
     self.health = health
+    form = [(-0.4, 0.4), (0.4, 0.4), (-0.4, -0.4), (0.4, -0.4)]
