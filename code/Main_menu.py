@@ -11,7 +11,7 @@ WHITE = (255, 255, 255)
 # functions
 def create_surface_with_text(text,font_size, text_rgb, bg_rgb):
     # creation font variable
-    font = pygame.freetype.SysFont("Courrier", font_size, bold=True)
+    font = pygame.freetype.SysFont("Ancient", font_size, bold=True)
      # Render the text to get its dimensions
     _, text_rect = font.render(text=text, fgcolor=text_rgb)
 
@@ -64,6 +64,8 @@ class UIElement(Sprite):
 
 class GameState(Enum):
     QUIT = -1
+
+
 def main():
     global running
     # init pygame window
@@ -73,7 +75,7 @@ def main():
 
     # create buttons
     btn_start = UIElement(
-        center_position=(520, 520),
+        center_position=(520, 420),
         font_size=70,
         bg_rgb=WHITE,
         text_rgb=WHITE,
@@ -82,7 +84,7 @@ def main():
     )
 
     btn_options = UIElement(
-        center_position=(520, 590),
+        center_position=(520, 480),
         font_size=35,
         bg_rgb=WHITE,
         text_rgb=WHITE,
@@ -91,14 +93,14 @@ def main():
     )
 
     btn_quit = UIElement(
-        center_position=(520, 640),
+        center_position=(520, 520),
         font_size=35,
         bg_rgb=WHITE,
         text_rgb=WHITE,
         text='Quit',
         action=GameState.QUIT
     )
-    btn_qu = UIElement(
+    Title = UIElement(
         center_position=(520, 200),
         font_size=80,
         bg_rgb=WHITE,
@@ -123,8 +125,8 @@ def main():
 
             screen.blit(background_image, (0, 0))
             # update all buttons
-            btn_qu.update((0,0), None)
-            btn_qu.draw(screen)
+            Title.update((0,0), None)
+            Title.draw(screen)
             if btn_start.update(pygame.mouse.get_pos(), mouse_up) is not None:
                 return
             btn_start.draw(screen)

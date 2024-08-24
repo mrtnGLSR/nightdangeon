@@ -19,9 +19,10 @@ while run:
             run = False
     # Movement
     keys = pygame.key.get_pressed()
-    x -= vel
-
-    x += vel
+    if keys[pygame.K_UP] or keys[pygame.K_a]:
+        x -= vel
+    if keys[pygame.K_UP] or keys[pygame.K_d]:
+        x += vel
     if keys[pygame.K_UP] or keys[pygame.K_w]:
         y -= vel
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
