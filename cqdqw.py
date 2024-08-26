@@ -64,26 +64,38 @@ class UIElement(Sprite):
 
 class GameState(Enum):
     QUIT = -1
-
+    TITLE = 0
+    NEWGAME = 1
 
 def main():
     global running
-    # init pygame window
     pygame.init()
-    screen = pygame.display.set_mode((1040,1040))
+    screen = pygame.display.set_mode((1040, 1040))
+    game_state = GameState.TITLE
+
+    while running:
+        if game_state == GameState.TITLE:
+            game_state = title_screen(screen)
+            return
+        if game_state == GameState.NEWGAME:
+            game_state = play_level(screen)
+        if game_state == GameState.QUIT:
+            pygame.quit
+            return
 
 
-    # create buttons
-    btn_start = UIElement(
+def title_screen(screen):
+     global running
+     btn_start = UIElement(
         center_position=(520, 420),
         font_size=70,
         bg_rgb=WHITE,
         text_rgb=WHITE,
         text='Start!',
-        action=None
+        action=GameState.NEWGAME
     )
 
-    btn_options = UIElement(
+     btn_options = UIElement(
         center_position=(520, 480),
         font_size=35,
         bg_rgb=WHITE,
@@ -92,7 +104,7 @@ def main():
         action=None
     )
 
-    btn_quit = UIElement(
+     btn_quit = UIElement(
         center_position=(520, 520),
         font_size=35,
         bg_rgb=WHITE,
@@ -100,7 +112,7 @@ def main():
         text='Quit',
         action=GameState.QUIT
     )
-    Title = UIElement(
+     Title = UIElement(
         center_position=(520, 200),
         font_size=80,
         bg_rgb=WHITE,
@@ -108,37 +120,37 @@ def main():
         text='Night Dungeon',
 
     )
-
     
+     entitys = [btn_start, btn_options, btn_quit, Title] 
 
-
-    while running:
+     while running:
         mouse_up = False
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
             # init window name
             pygame.display.set_caption('Night Dungeon')
-
             # load images
             background_image = pygame.image.load("code/img/background.jpg")
-
             screen.blit(background_image, (0, 0))
             # update all buttons
-            Title.update((0,0), None)
-            Title.draw(screen)
-            if btn_start.update(pygame.mouse.get_pos(), mouse_up) is not None:
-                return
-            btn_start.draw(screen)
-            if btn_options.update(pygame.mouse.get_pos(), mouse_up) is not None:
-                return
-            btn_options.draw(screen)
-            if btn_quit.update(pygame.mouse.get_pos(), mouse_up) is not None:
-                return
-            btn_quit.draw(screen)
+            for entity in entitys:
+                ui_action =entity.update(pygame.mouse.get_pos(), mouse_up)
+                if ui_action is not None:
+                    return
+                entity.draw(screen)
             pygame.display.flip()
             if event.type == pygame.QUIT:
                 running = False
 
+def play_level(screen):
+    btn_options = UIElement(
+        center_position=(520, 480),
+        font_size=35,
+        bg_rgb=WHITE,
+        text_rgb=WHITE,
+        text='Options',
+        action=None
+    )
 
 main()

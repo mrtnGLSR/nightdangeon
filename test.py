@@ -9,11 +9,11 @@ x = 50
 y = 50
 width = 64
 height = 64
-vel = 5
+vel = 1
 # Game Loop
 run = True
 while run:
-    pygame.time.delay(100)
+    pygame.time.delay(3)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
