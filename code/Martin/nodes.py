@@ -1,15 +1,19 @@
 # add nodes
 
 # modules
-from api import solide
+from API import Solide
 
 # define wall
 class Wall(Solide):
-    def __init__(self)
-    form = [(-0.5, 0.5), (0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
-    walkable = False
+    def __init__(self):
+        self.draw = [(-0.5, 0.5), (0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
+        self.walkable = False
 
-class BrickWall
-
+# deifne floor
+class floor(Solide):
+    def __init__(self, form, position, walkable, texture):
+        super().__init__(form, position, walkable, texture)
+        self.draw = [(-0.5, 0.5), (0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
+        self.walkable = True
     
 
