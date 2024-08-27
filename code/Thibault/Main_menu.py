@@ -121,7 +121,7 @@ def main():
             pygame.display.set_caption('Night Dungeon')
 
             # load images
-            background_image = pygame.image.load("code/img/background.jpg")
+            background_image = pygame.image.load("./img/background.jpg")
 
             screen.blit(background_image, (0, 0))
             # update all buttons
