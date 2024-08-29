@@ -6,6 +6,9 @@ nbChunkY = 8
 nbBlocksX = 9
 nbBlocksY = 9
 
+# variables
+map = []
+
 # define chunks
 class Chunk:
     def __init__(self, chunkContent):
@@ -19,14 +22,26 @@ class Solide:
         self.texture = texture
 
 class Entity(Solide):
-    def __init__(self, draw, position, walkable, texture):
-        super().__init__(draw, walkable, texture)
-        # fonction de mouvement
-<<<<<<< Updated upstream
-        def move(self, xMove, Ymove):
-            print(position)
-=======
+    def __init__(self, draw, position, walkable, texture, health):
+        Solide.__init__(self, draw, position, walkable, texture)
+        self.health = health
+
+    # fonction de mouvement
     def move(self, xMove, yMove):
+        # détection des collisions    
+        def defineBlockList(self, direction):
+            blocklist=[]
+            if direction == "x":
+                for chunkCheckNumber in range(2):
+                    for i in range(nbBlocksX):
+                        if chunkCheckNumber == 0:
+                            if int(self.position[0]) + i > nbBlocksX:
+                                break
+                        blocklist.append(map[self.position[3]][self.position[2] + chunkCheckNumber].content[self.position[1]][i + (self.position)])
+            return(blocklist)
+        def checkCloserobject(self, blocksList):
+            pass
+        print(defineBlockList(self, "x"))
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
@@ -45,14 +60,12 @@ class Entity(Solide):
         # arrondire les nombres
         for i in range(2):
             self.position[i] = (round(self.position[i], 1))
->>>>>>> Stashed changes
 
 class Player(Entity):
-    def __init__(self, health, position):
-        Entity.__init__(self, [(-0.4, 0.4), (0.4, 0.4), (-0.4, -0.4), (0.4, -0.4)], position, health)
+    def __init__(self, position):
+        Entity.__init__(self, [(-0.4, 0.4), (0.4, 0.4), (-0.4, -0.4), (0.4, -0.4)], position, False, False, 100)
 
 # définition de la map
-map = []
 
 for ymap in range(nbChunkY):
     map.append([])
@@ -66,12 +79,6 @@ for ymap in range(nbChunkY):
         
 print(map)
 print(tmpChunkTemplate)
-<<<<<<< Updated upstream
-testPlayer = Player(1, [1, 1, 1, 1])
-testPlayer.move()
-=======
-testPlayer = Player(1, [1, 1, 1, 1], False)
-for i in range(100):
-    testPlayer.move(0.1, 0)
-    print (testPlayer.position)
->>>>>>> Stashed changes
+testPlayer = Player([1, 1, 1, 1])
+testPlayer.move(0.1, 0)
+print (testPlayer.position)
