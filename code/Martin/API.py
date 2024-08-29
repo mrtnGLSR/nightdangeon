@@ -22,8 +22,30 @@ class Entity(Solide):
     def __init__(self, draw, position, walkable, texture):
         super().__init__(draw, walkable, texture)
         # fonction de mouvement
+<<<<<<< Updated upstream
         def move(self, xMove, Ymove):
             print(position)
+=======
+    def move(self, xMove, yMove):
+        # détection des changementes de chunks
+        #   position x
+        if self.position[0] + xMove >= nbBlocksX:
+            self.position[2] += int((self.position[0] + xMove) // nbBlocksX)
+        if self.position[0] + xMove < nbBlocksX:
+            self.position[2] -= int((self.position[0] + xMove) // nbBlocksX)
+        #   position y
+        if self.position[1] + yMove >= nbBlocksY:
+            self.position[3] += int((self.position[1] + yMove) // nbBlocksY)
+        if self.position[1] + yMove < nbBlocksY:
+            self.position[3] -= int((self.position[1] + yMove) // nbBlocksY)
+        # changement de position
+        self.position[0] += (xMove % (nbBlocksX))
+        self.position[1] += (yMove % (nbBlocksY))
+
+        # arrondire les nombres
+        for i in range(2):
+            self.position[i] = (round(self.position[i], 1))
+>>>>>>> Stashed changes
 
 class Player(Entity):
     def __init__(self, health, position):
@@ -44,5 +66,12 @@ for ymap in range(nbChunkY):
         
 print(map)
 print(tmpChunkTemplate)
+<<<<<<< Updated upstream
 testPlayer = Player(1, [1, 1, 1, 1])
 testPlayer.move()
+=======
+testPlayer = Player(1, [1, 1, 1, 1], False)
+for i in range(100):
+    testPlayer.move(0.1, 0)
+    print (testPlayer.position)
+>>>>>>> Stashed changes
