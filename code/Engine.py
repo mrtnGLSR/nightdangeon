@@ -57,7 +57,6 @@ class Entity(Solide):
                             break
                         # ajouter le block à la liste de blocks en fonction des objets sur la map
                         blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
-                        print(blocklist)
             
             # vérification Ouest
             if direction == "O":
@@ -111,7 +110,7 @@ class Entity(Solide):
         def checkCloserobject(self, blocksList):
             distance = 0
 
-        print(defineBlockList(self, "N"))
+        print(defineBlockList(self, "E"))
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
