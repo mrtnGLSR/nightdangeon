@@ -21,5 +21,5 @@ for ymap in range(nbChunkY):
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()]]))
 
-testPlayer = Player([1, 1, 1, 1])
+testPlayer = Player([8, 1, 1, 1])
 testPlayer.move(0.1, 0)

@@ -106,11 +106,19 @@ class Entity(Solide):
 
             return(blocklist)
         
-        # TODO fonction de calcule de la distance
-        def checkCloserobject(self, blocksList):
-            distance = 0
+        # fonction de calcule de la distance
+        def checkCloserobject(self, blocksList, direction):
+            distance = 0.0
+            for i in blocksList:
+                if i.walkable:
+                    distance += 1
+                else:
+                    break
+            distance -= (self.position[{"N":1, "S":1, "E":0, "O":0}[direction]]) % 1
+            distance -= self.draw[{"N":1, "S":3, "E":0, "O":2}[direction]] + 0.5
+            return(round(distance, 1))
 
-        print(defineBlockList(self, "E"))
+        print(checkCloserobject(self, defineBlockList(self, "E"), "E"))
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
