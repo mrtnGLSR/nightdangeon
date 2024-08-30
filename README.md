@@ -1,14 +1,14 @@
 # Night Dungeon
-Jeu d'exploration incarnant un avanturier avide d'explorer les temples les plus profonds
+Jeu d'exploration incarnant un avanturier avide d'explorer les temples les plus profonds.
 
 
-# Library necessary
+# 📚Library necessary
 
-## Pygame
+## 🐍Pygame
 ```Python
 pip install pygame
 ```
-## Pygame widgets
+## 🐍Pygame widgets
 ```Python
 pip install pygame_widgets
 ```
