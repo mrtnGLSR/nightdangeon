@@ -10,7 +10,8 @@ running = True
 RED = (178, 34, 34)
 WHITE = (255, 255, 255)
 game_state = ""
-vol = 0.5 # Variable volume
+vol_music = 0.5 # Variable volume de la musique
+vol_buttons_sfx = 1
 # Initialisation de Pygame
 pygame.init()
 screen_width = 1040
@@ -18,12 +19,15 @@ screen_height = 798
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Night Dungeon")
 
-# Lancement de la musique
+# Lancement de la musique et des sfx
 pygame.mixer.init()
 lobby_music = pygame.mixer.Sound('./music/SM_Lobby.mp3')
 lobby_music.play()
+lobby_music.set_volume(vol_music)
 
-lobby_music.set_volume(vol)
+button_sfx = pygame.mixer.Sound('./sfx/button_sfx.mp3')
+lobby_music.set_volume(vol_buttons_sfx)
+
 # Chargement de l'image d'arrière-plan
 background_image = pygame.image.load("./img/bg.png").convert()
 bg_width = background_image.get_width()
@@ -107,7 +111,9 @@ def title_screen(screen):
     while running:
         mouse_up = False
         for event in pygame.event.get():
+                
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                pygame.mixer.Channel(0).play(pygame.mixer.Sound(button_sfx))# Joue le sfx de quannd on appuies sur la souris
                 mouse_up = True
             if event.type == pygame.QUIT:
                 return GameState.QUIT
@@ -126,7 +132,9 @@ def options_screen(screen):
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
     music_text = UIElement(center_position=(520, 250), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Music')
-    slider = Slider(screen, 450, 300, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
+    slider_music = Slider(screen, 450, 300, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
+    sfx_text = UIElement(center_position=(520, 350), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Sfx')
+    slider_sfx = Slider(screen, 450, 400, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     while running:
         mouse_up = False
         events = pygame.event.get()  # Récupérer tous les événements
@@ -135,7 +143,7 @@ def options_screen(screen):
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-                
+                pygame.mixer.Channel(0).play(button_sfx) # Joue le sfx de quannd on appuies sur la souris
             if event.type == pygame.QUIT:
                 return GameState.QUIT
 
@@ -144,15 +152,20 @@ def options_screen(screen):
         # Mettre à jour et dessiner les autres éléments de l'UI
         Title.update((0, 0), None)
         music_text.update((0, 0), None)
+        sfx_text.update((0, 0), None)
         Title.draw(screen)
         music_text.draw(screen)
-        lobby_music.set_volume((slider.getValue() / 100))
+        sfx_text.draw(screen)
+        lobby_music.set_volume((slider_music.getValue() / 100))
+        button_sfx.set_volume((slider_sfx.getValue() / 100))
         ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
             return ui_action
         btn_return.draw(screen)
-        # Affichage du slider
-        slider.draw()
+        # Affichage du slider_music
+
+        slider_music.draw()
+        slider_sfx.draw()
         pygame.display.flip()
 
         
