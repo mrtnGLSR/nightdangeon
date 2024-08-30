@@ -1,5 +1,8 @@
 # api for the game
 
+# modules
+from copy import copy
+
 # constants
 nbChunkX = 8
 nbChunkY = 8
@@ -14,6 +17,7 @@ class Chunk:
     def __init__(self, chunkContent):
         self.chunkContent = chunkContent
 
+# définition des objets affichés
 class Solide:
     def __init__(self, draw, position, walkable, texture):
         self.draw = draw
@@ -21,27 +25,104 @@ class Solide:
         self.walkable = walkable
         self.texture = texture
 
+# définitions des entités (objets mobiles)
 class Entity(Solide):
     def __init__(self, draw, position, walkable, texture, health):
         Solide.__init__(self, draw, position, walkable, texture)
         self.health = health
-
     # fonction de mouvement
     def move(self, xMove, yMove):
-        # détection des collisions    
+        # détection des collisions
         def defineBlockList(self, direction):
             blocklist=[]
-            if direction == "x":
-                for chunkCheckNumber in range(2):
+
+            # vérification Est 
+            if direction == "E":
+                # vérification de la position dans l'espace pour ne pas sortir de la map
+                nbChunkChecked = 2
+                if self.position[2] == nbChunkX:
+                    nbChunkChecked = 1
+                # boucle par chunk traité
+                for chunkCheckNumber in range(nbChunkChecked):
+                    # définir une position virtuelle comme point de départ en terme de traitment des chunks
+                    positionInChunk = copy(self.position)
+                    # changer la position si le chunk à traiter change
+                    if chunkCheckNumber == 1:
+                        positionInChunk[0] = 0
+                        positionInChunk[1] += 1
+                        positionInChunk[3] += 1
+                    # traiter le chunk block par block
                     for i in range(nbBlocksX):
-                        if chunkCheckNumber == 0:
-                            if int(self.position[0]) + i > nbBlocksX:
-                                break
-                        blocklist.append(map[self.position[3]][self.position[2] + chunkCheckNumber].content[self.position[1]][i + (self.position)])
+                        print(i)
+                        # terminer le traitement du chunk si l'index arrive à la fin
+                        if i + positionInChunk[0] == nbBlocksX:
+                            print("break")
+                            break
+                        # ajouter le block à la liste de blocks en fonction des objets sur la map
+                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
+                        print(blocklist)
+
+            # vérification Oest
+            if direction == "O":
+                nbChunkChecked = 2
+                if self.position[2] == 0:
+                    nbChunkChecked = 1
+                for chunkCheckNumber in range(nbChunkChecked):
+                    positionInChunk = copy(self.position)
+                    if chunkCheckNumber == 1:
+                        positionInChunk[0] = 0
+                        positionInChunk[1] += 1
+                        positionInChunk[3] += 1
+                    for i in range(nbBlocksX):
+                        print(i)
+                        if i + positionInChunk[0] == nbBlocksX:
+                            print("break")
+                            break
+                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
+                        print(blocklist)
+
+            # TODO vérification Nord
+            if direction == "N":
+                nbChunkChecked = 2
+                if self.position[2] == nbChunkX:
+                    nbChunkChecked = 1
+                for chunkCheckNumber in range(nbChunkChecked):
+                    positionInChunk = copy(self.position)
+                    if chunkCheckNumber == 1:
+                        positionInChunk[0] = 0
+                        positionInChunk[1] += 1
+                        positionInChunk[3] += 1
+                    for i in range(nbBlocksX):
+                        print(i)
+                        if i + positionInChunk[0] == nbBlocksX:
+                            print("break")
+                            break
+                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
+                        print(blocklist)
+
+            # TODO vérification Sude
+            if direction == "S":
+                nbChunkChecked = 2
+                if self.position[2] == nbChunkX:
+                    nbChunkChecked = 1
+                for chunkCheckNumber in range(nbChunkChecked):
+                    positionInChunk = copy(self.position)
+                    if chunkCheckNumber == 1:
+                        positionInChunk[0] = 0
+                        positionInChunk[1] += 1
+                        positionInChunk[3] += 1
+                    for i in range(nbBlocksX):
+                        print(i)
+                        if i + positionInChunk[0] == nbBlocksX:
+                            print("break")
+                            break
+                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
+                        print(blocklist)
+
             return(blocklist)
         def checkCloserobject(self, blocksList):
             pass
-        print(defineBlockList(self, "x"))
+        print(defineBlockList(self, "E"))
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
@@ -64,21 +145,3 @@ class Entity(Solide):
 class Player(Entity):
     def __init__(self, position):
         Entity.__init__(self, [(-0.4, 0.4), (0.4, 0.4), (-0.4, -0.4), (0.4, -0.4)], position, False, False, 100)
-
-# définition de la map
-
-for ymap in range(nbChunkY):
-    map.append([])
-    for xmap in range(nbChunkX):
-        # définition des chuks
-        tmpChunkTemplate = []
-        for ychunk in range(nbBlocksY):
-            tmpChunkTemplate.append([])
-            for xchunk in range(nbBlocksX):
-                tmpChunkTemplate[-1].append(0)
-        
-print(map)
-print(tmpChunkTemplate)
-testPlayer = Player([1, 1, 1, 1])
-testPlayer.move(0.1, 0)
-print (testPlayer.position)
