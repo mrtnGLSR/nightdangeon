@@ -49,20 +49,17 @@ class Entity(Solide):
                     # changer la position si le chunk à traiter change
                     if chunkCheckNumber == 1:
                         positionInChunk[0] = 0
-                        positionInChunk[1] += 1
-                        positionInChunk[3] += 1
+                        positionInChunk[2] += 1
                     # traiter le chunk block par block
                     for i in range(nbBlocksX):
-                        print(i)
                         # terminer le traitement du chunk si l'index arrive à la fin
                         if i + positionInChunk[0] == nbBlocksX:
-                            print("break")
                             break
                         # ajouter le block à la liste de blocks en fonction des objets sur la map
                         blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
                         print(blocklist)
-
-            # vérification Oest
+            
+            # vérification Ouest
             if direction == "O":
                 nbChunkChecked = 2
                 if self.position[2] == 0:
@@ -70,59 +67,51 @@ class Entity(Solide):
                 for chunkCheckNumber in range(nbChunkChecked):
                     positionInChunk = copy(self.position)
                     if chunkCheckNumber == 1:
-                        positionInChunk[0] = 0
-                        positionInChunk[1] += 1
-                        positionInChunk[3] += 1
+                        positionInChunk[0] = nbBlocksX -1
+                        positionInChunk[2] -= 1
                     for i in range(nbBlocksX):
-                        print(i)
-                        if i + positionInChunk[0] == nbBlocksX:
-                            print("break")
+                        if positionInChunk[0] - i <= 0:
                             break
-                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
-                        print(blocklist)
+                        print(chunkCheckNumber)
+                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] - chunkCheckNumber].chunkContent[int(positionInChunk[1])][int(positionInChunk[0]) - i])
 
-            # TODO vérification Nord
-            if direction == "N":
-                nbChunkChecked = 2
-                if self.position[2] == nbChunkX:
-                    nbChunkChecked = 1
-                for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
-                    if chunkCheckNumber == 1:
-                        positionInChunk[0] = 0
-                        positionInChunk[1] += 1
-                        positionInChunk[3] += 1
-                    for i in range(nbBlocksX):
-                        print(i)
-                        if i + positionInChunk[0] == nbBlocksX:
-                            print("break")
-                            break
-                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
-                        print(blocklist)
-
-            # TODO vérification Sude
+            # vérification Sude
             if direction == "S":
                 nbChunkChecked = 2
-                if self.position[2] == nbChunkX:
+                if self.position[1] == nbChunkY:
                     nbChunkChecked = 1
                 for chunkCheckNumber in range(nbChunkChecked):
                     positionInChunk = copy(self.position)
                     if chunkCheckNumber == 1:
-                        positionInChunk[0] = 0
-                        positionInChunk[1] += 1
+                        positionInChunk[1] = 0
                         positionInChunk[3] += 1
-                    for i in range(nbBlocksX):
-                        print(i)
-                        if i + positionInChunk[0] == nbBlocksX:
-                            print("break")
+                    for i in range(nbBlocksY):
+                        if i + positionInChunk[1] == nbBlocksY:
                             break
-                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
-                        print(blocklist)
+                        blocklist.append(map[positionInChunk[3] + chunkCheckNumber ][positionInChunk[2]].chunkContent[i + int(positionInChunk[1])][int(positionInChunk[0])])
+
+            # vérification Nord
+            if direction == "N":
+                nbChunkChecked = 2
+                if self.position[1] == 0:
+                    nbChunkChecked = 1
+                for chunkCheckNumber in range(nbChunkChecked):
+                    positionInChunk = copy(self.position)
+                    if chunkCheckNumber == 1:
+                        positionInChunk[1] = nbBlocksY -1
+                        positionInChunk[3] -= 1
+                    for i in range(nbBlocksY):
+                        if positionInChunk[1] - i <= 0:
+                            break
+                        blocklist.append(map[positionInChunk[3] - chunkCheckNumber][positionInChunk[2]].chunkContent[int(positionInChunk[1]) - i][int(positionInChunk[0])])
 
             return(blocklist)
+        
+        # TODO fonction de calcule de la distance
         def checkCloserobject(self, blocksList):
-            pass
-        print(defineBlockList(self, "E"))
+            distance = 0
+
+        print(defineBlockList(self, "N"))
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
@@ -144,4 +133,4 @@ class Entity(Solide):
 
 class Player(Entity):
     def __init__(self, position):
-        Entity.__init__(self, [(-0.4, 0.4), (0.4, 0.4), (-0.4, -0.4), (0.4, -0.4)], position, False, False, 100)
+        Entity.__init__(self, [-0.4, 0.4, 0.4, -0.4], position, False, False, 100)
