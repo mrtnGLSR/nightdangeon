@@ -113,7 +113,7 @@ def title_screen(screen):
         for event in pygame.event.get():
                 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                pygame.mixer.Channel(0).play(pygame.mixer.Sound(button_sfx))# Joue le sfx de quannd on appuies sur la souris
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound(button_sfx))# Joue le sfx de quannd on appuies sur la souris
                 mouse_up = True
             if event.type == pygame.QUIT:
                 return GameState.QUIT
@@ -143,7 +143,7 @@ def options_screen(screen):
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-                pygame.mixer.Channel(0).play(button_sfx) # Joue le sfx de quannd on appuies sur la souris
+                pygame.mixer.Channel(1).play(button_sfx) # Joue le sfx de quannd on appuies sur la souris
             if event.type == pygame.QUIT:
                 return GameState.QUIT
 
