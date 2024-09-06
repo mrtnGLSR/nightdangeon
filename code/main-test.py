@@ -1,5 +1,8 @@
+# ce code sert de teste actuellement mais servira de main par la suite
+
 from Engine import *
 from nodes import *
+from mapgen import *
 
 for ymap in range(nbChunkY):
     map.append([])
@@ -21,5 +24,6 @@ for ymap in range(nbChunkY):
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()]]))
 
-testPlayer = Player([8, 1, 1, 1])
+
+testPlayer = Player([7, 1, 1, 1])
 testPlayer.move(0.1, 0)
