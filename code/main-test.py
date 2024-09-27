@@ -11,7 +11,8 @@ for ymap in range(nbChunkY):
         #    for xchunk in range(nbBlocksX):
         #        tmpChunkTemplate[-1].append(Wall)
         #map[ymap].append(Chunk(tmpChunkTemplate))
-        map[ymap].append(Chunk([[BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
+        
+        map[ymap].append(Chunk([[BrickWall(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
@@ -19,7 +20,22 @@ for ymap in range(nbChunkY):
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
                                 [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()],
-                                [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()]]))
+                                [BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickFloor(), BrickWall()]
+                                ]))
 
 testPlayer = Player([1, 1, 1, 1])
 testPlayer.move(0.1, 0)
+
+
+        
+        
+    
+    
+
+
+
+
+
+
+
+    

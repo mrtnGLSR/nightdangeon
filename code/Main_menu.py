@@ -5,6 +5,7 @@ from enum import Enum
 from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
 import pygame_widgets
+from pathlib import Path
 # Variables
 running = True
 RED = (178, 34, 34)
@@ -79,6 +80,9 @@ class GameState(Enum):
     TITLE = 0
     OPTIONS = 1
 
+def starting_game():
+    exec(Path("game.py").read_text())
+
 def scrolling_bg():
     global scroll_x
     scroll_x -= scroll_speed
@@ -92,7 +96,7 @@ def title_screen(screen):
     btn_start = UIElement(center_position=(520, 420), 
                           font_size=70, bg_rgb=WHITE, 
                           text_rgb=WHITE, text='Start!', 
-                          action=None)
+                          action=starting_game)
     btn_options = UIElement(center_position=(520, 480),
                             font_size=35, bg_rgb=WHITE,
                             text_rgb=WHITE, text='Options',
