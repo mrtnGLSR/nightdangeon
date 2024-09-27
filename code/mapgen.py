@@ -4,8 +4,8 @@ nbBlocksY = 9
 nbChunkX = 8
 nbChunkY = 8
 map = []
-nbMapPoints = 4
-mapNoise = 15 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
+nbMapPoints = 6
+mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
 
 # modules
 import copy
@@ -21,6 +21,7 @@ class Chunk:
 
 # fonction de génération de la map
 def GenMap():
+
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
         map.append([])
@@ -73,19 +74,19 @@ def GenMap():
             wayMap.append(noiseChunk)
     
     # débugage d'affichage de la map
-    # for x in range(nbChunkX):
-    #     textX = ""
-    #     for y in range(nbChunkY):
-    #         if [x, y] in wayMap:
-    #             if [x, y] == pointMap[-1]:
-    #                 textX += '\x1b[6;30;42m' + '[E]' + '\x1b[0m'
-    #             elif [x, y] == pointMap[0]:
-    #                 textX += '\x1b[6;30;42m' + '[S]' + '\x1b[0m'
-    #             else:
-    #                 textX += '\x1b[6;30;44m' + '[ ]' + '\x1b[0m'
-    #         else:
-    #             textX += '\x1b[6;30;43m' + '[#]' + '\x1b[0m'
-    #     print(textX)
+    for x in range(nbChunkX):
+        textX = ""
+        for y in range(nbChunkY):
+            if [x, y] in wayMap:
+                if [x, y] == pointMap[-1]:
+                    textX += '\x1b[6;30;42m' + '[E]' + '\x1b[0m'
+                elif [x, y] == pointMap[0]:
+                    textX += '\x1b[6;30;42m' + '[S]' + '\x1b[0m'
+                else:
+                    textX += '\x1b[6;30;44m' + '[ ]' + '\x1b[0m'
+            else:
+                textX += '\x1b[6;30;43m' + '[#]' + '\x1b[0m'
+        print(textX)
 
     # définir les types de chunks
     for x in range(nbChunkX):
@@ -97,11 +98,27 @@ def GenMap():
                 chunkType = "Full"
             map[x][y].chunkType = chunkType
 
-    # TODO fonction pour creuser dans les mures de façon à créer des salles et des couloires
-    def grind():
-        pass
+    # Carré dans le chunk
+    def square(pos1, pos2):
+        posList = []
+        # pour l'axe parcourir le tableau en fonction de la différence entière entre la position 1 et la position 2
+        for x in range(int(((pos2[0] - pos1[0])**2)**0.5) + 1):
+            for y in range(int(((pos2[1] - pos1[1])**2)**0.5) + 1):
+                # insérer dans la liste les cohordonées x et y en fonction de si l'écart est positif ou négatif
+                posList.append([pos1[0] + x * {True:1, False:-1}[pos1[0] < pos2[0]], pos1[1] + y * {True:1, False:-1}[pos1[1] < pos2[1]]])
+        return[posList]
 
-    # TODO ajouter les bloques dans les chunks en fonction des chemins et du type
+    # fonction pour creuser dans les mures de façon à créer des salles et des couloires
+    def grind(side, type, chunkContent):
+        finalContent = copy.copy(chunkContent)
+        # définir un carré contenant en fonction du type de chunk et de la direction à creuser
+        grindedPosList = {"Coridor":{"left":[[0, 3], [2, 5]], "right":[[6, 3], [8, 5]], "top":[[3, 0], [5, 2]], "bottom":[[3, 6], [5, 8]], "center":[[3, 3], [5, 5]]}[side], "Room":{"left":[[0, 3], [0, 5]], "right":[[8, 3], [8, 5]], "top":[[3, 0], [5, 0]], "bottom":[[3, 8], [5, 8]], "center":[[1, 1], [7, 7]]}[side]}[type]
+        grindedBlocks = square(grindedPosList[0], grindedPosList[1])[0]
+        for i in grindedBlocks:
+            finalContent[i[0]][i[1]] = BrickFloor()
+        return finalContent
+
+    # ajouter les bloques dans les chunks en fonction des chemins et du type
     for x in range(nbChunkX):
         for y in range(nbChunkY):
             chunkContent = []
@@ -109,13 +126,32 @@ def GenMap():
             for xchunk in range(nbBlocksX):
                 chunkContent.append([])
                 for ychunk in range(nbBlocksY):
-                    chunkContent[xchunk].append(BrickWall)
-            if map[x][y].chunkType != "Full":
+                    chunkContent[xchunk].append(BrickWall())
+            if map[x][y].chunkType == "Full":
                 pass
-
-
+            else:
+                # creuser le centre en fonction du type de chunk
+                chunkContent = grind("center", map[x][y].chunkType, chunkContent)
+                # creuser chaque côté en fonction de ses voisins        vvvvvvv------désigue la position relative des chunks à vérifier
+                for i in [["left", [-1, 0]], ["right", [1, 0]], ["top", [0, -1]], ["bottom", [0, 1]]]:
+                    # vérifier que les voisins  sont des vides et les creuser si c'est vrai
+                    if [x + i[1][0], y + i[1][1]] in wayMap:
+                        chunkContent = grind(i[0], map[x][y].chunkType, chunkContent)
+            map[x][y].chunkContent = chunkContent
     
-    
+    #sdgmsd fgksdkjasdjkfhakjsdnf---------------------
+    for y1 in range(nbChunkY):
+        for y2 in range(nbBlocksY):
+            text=""
+            for x1 in range(nbChunkX):
+                for x2 in range(nbBlocksX):
+                    if isinstance(map[x1][y1].chunkContent[x2][y2], BrickFloor):
+                        text += '\x1b[6;30;42m' + '[F]' + '\x1b[0m'
+                    elif isinstance(map[x1][y1].chunkContent[x2][y2], BrickWall):
+                        text += '\x1b[6;30;44m' + '[W]' + '\x1b[0m'
+                    else:
+                        text += '\x1b[6;30;42m' + '[ ]' + '\x1b[0m'
+            print(text)
+
             
-                
 GenMap()
