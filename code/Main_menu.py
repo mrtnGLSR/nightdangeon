@@ -3,10 +3,11 @@ import pygame.freetype
 from pygame.sprite import Sprite
 from enum import Enum
 from pygame_widgets.slider import Slider
-from pygame_widgets.textbox import TextBox
 import pygame_widgets
 import json
 from pathlib import Path
+from pygame_widgets.button import ButtonArray
+
 # Variables
 running = True
 RED = (178, 34, 34)
@@ -81,8 +82,7 @@ class GameState(Enum):
     TITLE = 0
     OPTIONS = 1
 
-def starting_game():
-    exec(Path("game.py").read_text())
+
 
 def scrolling_bg():
     global scroll_x
@@ -92,12 +92,17 @@ def scrolling_bg():
     screen.blit(background_image, (scroll_x, 0))
     screen.blit(background_image, (scroll_x + bg_width, 0))
 
-def title_screen(screen):
+
+def choose_levels(screen):
+    title_screen(screen, 0)
+
+def title_screen(screen, state_level):
+    
     global running
     btn_start = UIElement(center_position=(520, 420), 
                           font_size=70, bg_rgb=WHITE, 
                           text_rgb=WHITE, text='Start!', 
-                          action=starting_game)
+                          action=choose_levels)
     btn_options = UIElement(center_position=(520, 480),
                             font_size=35, bg_rgb=WHITE,
                             text_rgb=WHITE, text='Options',
@@ -144,12 +149,14 @@ def options_screen(screen):
     
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
+    # Gestion sound effects et musique
     music_text = UIElement(center_position=(520, 250), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Music')
     slider_music = Slider(screen, 450, 300, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     slider_music.setValue(settings['volume_music'])
     sfx_text = UIElement(center_position=(520, 350), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Sfx')
     slider_sfx = Slider(screen, 450, 400, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     slider_sfx.setValue(settings['volume_sfx'])
+    # Menu déroulant
     while running:
         mouse_up = False
         events = pygame.event.get()  # Récupérer tous les événements
@@ -195,7 +202,7 @@ def main():
     
     while running:
         if game_state == GameState.TITLE:
-            game_state = title_screen(screen)
+            game_state = title_screen(screen, 0)
         elif game_state == GameState.OPTIONS:
             game_state = options_screen(screen)
         elif game_state == GameState.QUIT:
