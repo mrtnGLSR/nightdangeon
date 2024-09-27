@@ -128,28 +128,28 @@ La jeu se termine lorseque le joueur est mort ou que il a trouver l'objet mystiq
 
 ## Install Python
 ### Download Python
-Allez sur le site de [Python](https://www.python.org/downloads/) et télécharger python 12.
+Allez sur le site de Python et téléchargez Python 3.12.
 
 ### Start Installer
-Lancer l'instalateur de python et cliquez sur continuer jusqu'à la fin
+Lancez l'installateur de Python et cliquez sur 'Continuer' jusqu'à la fin.
 
 ## IDE Installation
 ### Download Installer
-Aller sur le site de [Visual Studio Code](https://code.visualstudio.com/) et télécharger.
+Allez sur le site de [Visual Studio Code](https://code.visualstudio.com/) et télécharger.
 
 ### Start Installer
-Lancer l'installeur et faite continuer.
+Lancez l'installeur et faite continuer.
 
 ## Select Python Interpreter
 ### Search
-Dans la barre de recherche de visual studio code cherchez 
+Dans la barre de recherche de Visual Studio Code, cherchez. 
 ```
 >Python Select Interpreter
 ```
 <img src="READMEfile/visual_studio_code_searchbar.png" alt="helpExemple" width="1000"/>
 
 ### Choose Interpreter
-Selectionner un interpreter si il en existe déja un et sinon chercher python sur votre pc après avoir séléctionnez **Enter Interpreter Path**.
+Sélectionnez un interpréteur s'il en existe déjà un, sinon cherchez Python sur votre PC après avoir sélectionné **Enter Interpreter Path**.
 <img src="READMEfile/visual_studio_code_select_interpreter.png" alt="helpExemple" width="1000"/>
 
 ## 📚Library necessary
