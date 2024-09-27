@@ -1,6 +1,8 @@
 # api for the game
 
 # modules
+from mapgen import map
+from nodes import Solide
 from copy import copy
 
 # constants
@@ -8,22 +10,6 @@ nbChunkX = 8
 nbChunkY = 8
 nbBlocksX = 9
 nbBlocksY = 9
-
-# variables
-map = []
-
-# define chunks
-class Chunk:
-    def __init__(self, chunkContent):
-        self.chunkContent = chunkContent
-
-# définition des objets affichés
-class Solide:
-    def __init__(self, draw, position, walkable, texture):
-        self.draw = draw
-        self.position = position
-        self.walkable = walkable
-        self.texture = texture
 
 # définitions des entités (objets mobiles)
 class Entity(Solide):
@@ -103,14 +89,47 @@ class Entity(Solide):
                         if positionInChunk[1] - i <= 0:
                             break
                         blocklist.append(map[positionInChunk[3] - chunkCheckNumber][positionInChunk[2]].chunkContent[int(positionInChunk[1]) - i][int(positionInChunk[0])])
-
             return(blocklist)
         
-        # TODO fonction de calcule de la distance
-        def checkCloserobject(self, blocksList):
-            distance = 0
+        # fonction de calcule de la distance
+        def checkCloserobject(self, blocksList, direction):
+            distance = 0.0
+            # ajouter un bloque à chaque case ou le joueur pourait marcher
+            for i in blocksList:
+                if i.walkable:
+                    distance += 1
+                else:
+                    break # si le joueur n'a pas la posibilité de marcher sur la case analysée, le compteur s'arrête
+            
+            # réduire la distance en fonction de la position du joueur sur le bloque
+            distance -= (self.position[{"N":1, "S":1, "E":0, "O":0}[direction]]) % 1
 
-        print(defineBlockList(self, "E"))
+            # réduire la distance en fonction de la forme du joueur
+            distance -= (((self.draw[{"N":1, "S":3, "E":0, "O":2}[direction]]) **2) **0.5 + 0.5)
+            return(round(distance, 1))
+        
+        # identifier le sens de mouvement
+        sens = 0
+        if xMove > 0:
+            sens = "E"
+        elif xMove < 0:
+            sens = "O"
+        if yMove > 0:
+            sens = "N"
+        elif yMove < 0:
+            sens = "S"
+        
+        # définir l'objet le plus proche en fonction du sens
+        closerBlock = checkCloserobject(self, defineBlockList(self, sens), sens)
+
+        # identifier si la distance est plus grande que le mouvement
+        if sens in ["E", "O"]:
+            if closerBlock <= (xMove ** 2) ** 0.5:
+                xMove = closerBlock * {"E":1, "O":-1}[sens]
+        if sens in ["N", "S"]:
+            if closerBlock <= (yMove ** 2) ** 0.5:
+                yMove = closerBlock * {"N":1, "S":-1}[sens]
+
         # détection des changementes de chunks
         #   position x
         if self.position[0] + xMove >= nbBlocksX:
@@ -130,6 +149,7 @@ class Entity(Solide):
         for i in range(2):
             self.position[i] = (round(self.position[i], 1))
 
+# définition du joueur
 class Player(Entity):
     def __init__(self, position):
         Entity.__init__(self, [-0.4, 0.4, 0.4, -0.4], position, False, False, 100)

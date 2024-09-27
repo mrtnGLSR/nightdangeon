@@ -167,7 +167,6 @@ def options_screen(screen):
             return ui_action
         btn_return.draw(screen)
         # Affichage du slider_music
-
         slider_music.draw()
         slider_sfx.draw()
         pygame.display.flip()
