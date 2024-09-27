@@ -32,7 +32,7 @@
    	 	- [Choose Interpreter](#Choose-Interpreter)
 	- [Library necessary](#Library-necessary)
    		- [Pygame](#Pygame)
-      		- [Pygame widgets](Pygame-widgets)
+      		- [Pygame widgets](#Pygame-widgets)
   - [FAQ](#FAQ)
   - [Documentions Library Links](Documentions-Library-Links)
   - [Authors](#Authors)
