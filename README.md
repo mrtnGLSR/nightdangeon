@@ -132,11 +132,11 @@ pip install pygame_widgets
     
 ## FAQ❔
 
-#### What IDE do we use?
+#### Quelle IDE faut-il utiliser?
 
 Visual studio code
 
-#### I can't find pygame when i am launch the code?
+#### Je ne trouve pas pygame quand je lance le code.
 
 Il faut bien choisir ton interpretter python dans ton IDE et voir si tu l'as bien installé
 
