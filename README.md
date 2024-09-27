@@ -17,7 +17,7 @@
        - [Arrows Launcher](#Arrows-Launcher)
        - [Cracked Floor](#Cracked-Floor)
     - [Life Management](#Life-Management)
-      -[Exemple life bar](#Exemple-life-bar)
+      - [Exemple life bar](#Exemple-life-bar)
     - [Void](#Void)
     - [The End](#The-End)
 - [Installation](#Installation)
