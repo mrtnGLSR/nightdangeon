@@ -5,6 +5,7 @@ from enum import Enum
 from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
 import pygame_widgets
+import json
 from pathlib import Path
 # Variables
 running = True
@@ -23,7 +24,7 @@ pygame.display.set_caption("Night Dungeon")
 # Lancement de la musique et des sfx
 pygame.mixer.init()
 lobby_music = pygame.mixer.Sound('./music/SM_Lobby.mp3')
-lobby_music.play()
+pygame.mixer.Channel(1).play(lobby_music)
 lobby_music.set_volume(vol_music)
 
 button_sfx = pygame.mixer.Sound('./sfx/button_sfx.mp3')
@@ -132,13 +133,23 @@ def title_screen(screen):
 
         pygame.display.flip()
 
-def options_screen(screen):
+def options_screen(screen): 
+    # Chemin du fichier JSON
+    file_path = './code/settings.json'
+
+    # Ouverture du fichier en mode lecture
+    with open(file_path, 'r') as infile:
+        settings = json.load(infile)
+
+    
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
     music_text = UIElement(center_position=(520, 250), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Music')
     slider_music = Slider(screen, 450, 300, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
+    slider_music.setValue(settings['volume_music'])
     sfx_text = UIElement(center_position=(520, 350), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Sfx')
     slider_sfx = Slider(screen, 450, 400, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
+    slider_sfx.setValue(settings['volume_sfx'])
     while running:
         mouse_up = False
         events = pygame.event.get()  # Récupérer tous les événements
@@ -158,10 +169,15 @@ def options_screen(screen):
         music_text.update((0, 0), None)
         sfx_text.update((0, 0), None)
         Title.draw(screen)
+        
         music_text.draw(screen)
         sfx_text.draw(screen)
         lobby_music.set_volume((slider_music.getValue() / 100))
         button_sfx.set_volume((slider_sfx.getValue() / 100))
+        data = {"volume_music": slider_music.getValue(),"volume_sfx": slider_sfx.getValue()}
+        # Ouverture du fichier en mode écriture et écriture des données
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile, indent=4)
         ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
             return ui_action
