@@ -21,9 +21,18 @@
     - [Void](#Void)
     - [The End](#The-End)
 - [Installation](#Installation)
+	-  [Install Python](#Install-Python)
+ 		- [Download Python](#Download-Python)
+   		- [Start Installer](#Start-Installer)
+	- [IDE Installation](#IDE-Installation)
+ 		- [Download Installer](#Download-Installer)
+   		- [Start Installer](#Start-Installer)
+   	- [Select Python Interpreter](#Select-Python-Interpreter)
+   		- [Search](#Search)
+   	 	- [Choose Interpreter](#Choose-Interpreter)
 	- [Library necessary](#Library-necessary)
-        - [Pygame](#Pygame)
-        - [Pygame widgets](Pygame-widgets)
+        	- [Pygame](#Pygame)
+        	- [Pygame widgets](Pygame-widgets)
   - [FAQ](#FAQ)
   - [Documentions Library Links](Documentions-Library-Links)
   - [Authors](#Authors)
@@ -117,8 +126,34 @@ La jeu se termine lorseque le joueur est mort ou que il a trouver l'objet mystiq
 
 # Installation♾️
 
-## 📚Library necessary
+## Install Python
+### Download Python
+Allez sur le site de [Python](https://www.python.org/downloads/) et télécharger python 12.
 
+### Start Installer
+Lancer l'instalateur de python et cliquez sur continuer jusqu'à la fin
+
+## IDE Installation
+### Download Installer
+Aller sur le site de [Visual Studio Code](https://code.visualstudio.com/) et télécharger.
+
+### Start Installer
+Lancer l'installeur et faite continuer.
+
+## Select Python Interpreter
+### Search
+Dans la barre de recherche de visual studio code cherchez 
+```
+>Python Select Interpreter
+```
+<img src="READMEfile/visual_studio_code_searchbar.png" alt="helpExemple" width="1000"/>
+
+### Choose Interpreter
+Selectionner un interpreter si il en existe déja un et sinon chercher python sur votre pc après avoir séléctionnez **Enter Interpreter Path**.
+<img src="READMEfile/visual_studio_code_select_interpreter.png" alt="helpExemple" width="1000"/>
+
+## 📚Library necessary
+Ouvrez un nouveau terminal et executez les commande suivante.
 ### 🐍Pygame
 ```Python
 pip install pygame
@@ -144,6 +179,8 @@ Il faut bien choisir ton interpretter python dans ton IDE et voir si tu l'as bie
 ## 🔗 Documentions Library Links
 * [Pygame](https://www.pygame.org/docs/)
 * [Pygame-widgets](https://pygamewidgets.readthedocs.io/en/stable/)
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [Python](https://www.python.org/)
 
 
 
