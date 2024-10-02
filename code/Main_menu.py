@@ -14,8 +14,8 @@ running = True
 RED = (178, 34, 34)
 WHITE = (255, 255, 255)
 game_state = ""
-vol_music = 0.5 # Variable volume de la musique
-vol_buttons_sfx = 1
+
+
 # Initialisation de Pygame
 pygame.init()
 screen_width = 1040
@@ -25,6 +25,17 @@ pygame.display.set_caption("Night Dungeon")
 
 icon = pygame.image.load('./img/icon_x64.png')
 
+# Ouverture et lecture des settings
+# Chemin du fichier JSON
+file_path = './code/settings.json'
+
+# Ouverture du fichier en mode lecture
+with open(file_path, 'r') as infile:
+    settings = json.load(infile)
+
+# Inatialisation des variables de volume
+vol_music = (settings['volume_music'] / 100)# Variable volume de la musique
+vol_buttons_sfx = (settings['volume_sfx'] / 100)
 # Appliquer l'icône à la fenêtre
 pygame.display.set_icon(icon)
 
@@ -35,7 +46,7 @@ pygame.mixer.Channel(1).play(lobby_music)
 lobby_music.set_volume(vol_music)
 
 button_sfx = pygame.mixer.Sound('./sfx/button_sfx.mp3')
-lobby_music.set_volume(vol_buttons_sfx)
+button_sfx.set_volume(vol_buttons_sfx)
 
 # Chargement de l'image d'arrière-plan
 background_image = pygame.image.load("./img/bg.png").convert()
@@ -146,14 +157,9 @@ def title_screen(screen, state_level):
         pygame.display.flip()
 
 def options_screen(screen): 
-    # Chemin du fichier JSON
-    file_path = './code/settings.json'
-
-    # Ouverture du fichier en mode lecture
     with open(file_path, 'r') as infile:
         settings = json.load(infile)
 
-    
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
     # Gestion sound effects et musique
