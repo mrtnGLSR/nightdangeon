@@ -23,7 +23,9 @@ screen_height = 798
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Night Dungeon")
 
-icon = pygame.image.load("./img/logo.png") 
+icon = pygame.image.load('./img/icon_x64.png')
+
+# Appliquer l'icône à la fenêtre
 pygame.display.set_icon(icon)
 
 # Lancement de la musique et des sfx
