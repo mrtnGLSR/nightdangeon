@@ -1,7 +1,7 @@
 # api for the game
 
 # modules
-from mapgen import map
+from camera import *
 from nodes import Solide
 from copy import copy
 
@@ -14,8 +14,15 @@ nbBlocksY = 9
 # définitions des entités (objets mobiles)
 class Entity(Solide):
     def __init__(self, draw, position, walkable, texture, health):
-        Solide.__init__(self, draw, position, walkable, texture)
+        Solide.__init__(self, draw, position, walkable, texture, [100])
         self.health = health
+        self.camera = Camera(self)
+
+    # fonction  de rafraichissement
+    def refresh(self):
+        self.camera.refresh(self.position)
+
+
     # fonction de mouvement
     def move(self, xMove, yMove):
         # détection des collisions

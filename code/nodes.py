@@ -26,10 +26,10 @@ class Floor(Solide):
 # brick define brick wall
 class BrickWall(Wall):
     def __init__(self):
-        Wall.__init__(self, './img/brick-floor.jpg', 1)
+        Wall.__init__(self, "brickWall", 1)
 
 
 # brick define brick floor
 class BrickFloor(Floor):
     def __init__(self):
-        Floor.__init__(self, './img/brick-wall.jpg', 0)
+        Floor.__init__(self, "brickFloor", 0)

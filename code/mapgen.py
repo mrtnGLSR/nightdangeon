@@ -72,21 +72,6 @@ def GenMap():
         if noiseChunk[XorY] + moreOrLess > 0 and noiseChunk[XorY] < [nbChunkX, nbChunkY][XorY]:
             noiseChunk[XorY] = noiseChunk[XorY] + moreOrLess
             wayMap.append(noiseChunk)
-    
-    # débugage d'affichage de la map
-    for x in range(nbChunkX):
-        textX = ""
-        for y in range(nbChunkY):
-            if [x, y] in wayMap:
-                if [x, y] == pointMap[-1]:
-                    textX += '\x1b[6;30;42m' + '[E]' + '\x1b[0m'
-                elif [x, y] == pointMap[0]:
-                    textX += '\x1b[6;30;42m' + '[S]' + '\x1b[0m'
-                else:
-                    textX += '\x1b[6;30;44m' + '[ ]' + '\x1b[0m'
-            else:
-                textX += '\x1b[6;30;43m' + '[#]' + '\x1b[0m'
-        print(textX)
 
     # définir les types de chunks
     for x in range(nbChunkX):
@@ -138,20 +123,6 @@ def GenMap():
                     if [x + i[1][0], y + i[1][1]] in wayMap:
                         chunkContent = grind(i[0], map[x][y].chunkType, chunkContent)
             map[x][y].chunkContent = chunkContent
-    
-    #sdgmsd fgksdkjasdjkfhakjsdnf---------------------
-    for y1 in range(nbChunkY):
-        for y2 in range(nbBlocksY):
-            text=""
-            for x1 in range(nbChunkX):
-                for x2 in range(nbBlocksX):
-                    if isinstance(map[x1][y1].chunkContent[x2][y2], BrickFloor):
-                        text += '\x1b[6;30;42m' + '[F]' + '\x1b[0m'
-                    elif isinstance(map[x1][y1].chunkContent[x2][y2], BrickWall):
-                        text += '\x1b[6;30;44m' + '[W]' + '\x1b[0m'
-                    else:
-                        text += '\x1b[6;30;42m' + '[ ]' + '\x1b[0m'
-            print(text)
 
             
 GenMap()

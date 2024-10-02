@@ -1,5 +1,5 @@
 import pygame
-from camera import camera  
+from camera import camera
 
 # Liste globale pour stocker tous les sprites à dessiner
 sprites = []
