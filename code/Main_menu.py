@@ -3,10 +3,12 @@ import pygame.freetype
 from pygame.sprite import Sprite
 from enum import Enum
 from pygame_widgets.slider import Slider
-from pygame_widgets.textbox import TextBox
 import pygame_widgets
 import json
 from pathlib import Path
+from pygame_widgets.button import ButtonArray
+import os
+
 # Variables
 running = True
 RED = (178, 34, 34)
@@ -20,6 +22,11 @@ screen_width = 1040
 screen_height = 798
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Night Dungeon")
+
+icon = pygame.image.load('./img/icon_x64.png')
+
+# Appliquer l'icône à la fenêtre
+pygame.display.set_icon(icon)
 
 # Lancement de la musique et des sfx
 pygame.mixer.init()
@@ -80,9 +87,10 @@ class GameState(Enum):
     QUIT = -1
     TITLE = 0
     OPTIONS = 1
+    PREGAME = 2
+    
 
-def starting_game():
-    exec(Path("game.py").read_text())
+
 
 def scrolling_bg():
     global scroll_x
@@ -92,12 +100,16 @@ def scrolling_bg():
     screen.blit(background_image, (scroll_x, 0))
     screen.blit(background_image, (scroll_x + bg_width, 0))
 
-def title_screen(screen):
+
+
+
+def title_screen(screen, state_level):
+    
     global running
     btn_start = UIElement(center_position=(520, 420), 
                           font_size=70, bg_rgb=WHITE, 
                           text_rgb=WHITE, text='Start!', 
-                          action=starting_game)
+                          action=GameState.PREGAME)
     btn_options = UIElement(center_position=(520, 480),
                             font_size=35, bg_rgb=WHITE,
                             text_rgb=WHITE, text='Options',
@@ -144,12 +156,14 @@ def options_screen(screen):
     
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
+    # Gestion sound effects et musique
     music_text = UIElement(center_position=(520, 250), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Music')
     slider_music = Slider(screen, 450, 300, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     slider_music.setValue(settings['volume_music'])
     sfx_text = UIElement(center_position=(520, 350), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Sfx')
     slider_sfx = Slider(screen, 450, 400, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     slider_sfx.setValue(settings['volume_sfx'])
+    # Menu déroulant
     while running:
         mouse_up = False
         events = pygame.event.get()  # Récupérer tous les événements
@@ -165,19 +179,21 @@ def options_screen(screen):
         scrolling_bg()
         
         # Mettre à jour et dessiner les autres éléments de l'UI
+        Title.draw(screen)
+        music_text.draw(screen)
+        sfx_text.draw(screen)
         Title.update((0, 0), None)
         music_text.update((0, 0), None)
         sfx_text.update((0, 0), None)
-        Title.draw(screen)
-        
-        music_text.draw(screen)
-        sfx_text.draw(screen)
         lobby_music.set_volume((slider_music.getValue() / 100))
         button_sfx.set_volume((slider_sfx.getValue() / 100))
-        data = {"volume_music": slider_music.getValue(),"volume_sfx": slider_sfx.getValue()}
         # Ouverture du fichier en mode écriture et écriture des données
-        with open(file_path, 'w') as outfile:
-            json.dump(data, outfile, indent=4)
+        if settings['volume_sfx'] != slider_sfx.getValue() or settings['volume_music'] != slider_music.getValue():
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                data = {"volume_music": slider_music.getValue(),"volume_sfx": slider_sfx.getValue()}
+
+                with open(file_path, 'w') as outfile:
+                    json.dump(data, outfile, indent=4)
         ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
             return ui_action
@@ -187,7 +203,43 @@ def options_screen(screen):
         slider_sfx.draw()
         pygame.display.flip()
 
+def pregame_screen(screen): 
+    btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
+    Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Settings')
+    btn_easy = UIElement(center_position=(380, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Easy')
+    btn_normal = UIElement(center_position=(520, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Normal',)
+    btn_hard = UIElement(center_position=(660, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Hard',)
+
+    # Menu déroulant
+    while running:
+        mouse_up = False
+        events = pygame.event.get()  # Récupérer tous les événements
+        pygame_widgets.update(events)  # Mettre à jour les widgets avec tous les événements
         
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_up = True
+                pygame.mixer.Channel(0).play(button_sfx) # Joue le sfx de quannd on appuies sur la souris
+            if event.type == pygame.QUIT:
+                return GameState.QUIT
+
+        scrolling_bg()
+        
+        # Mettre à jour et dessiner les autres éléments de l'UI
+        Title.draw(screen)
+        ui_action = btn_easy.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action = btn_normal.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action = btn_hard.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
+        if ui_action is not None:
+            return ui_action
+        btn_return.draw(screen)
+        btn_easy.draw(screen)
+        btn_hard.draw(screen)
+        btn_normal.draw(screen)
+        # Affichage du slider_music
+        pygame.display.flip()
+
 
 def main():
     global running
@@ -195,9 +247,11 @@ def main():
     
     while running:
         if game_state == GameState.TITLE:
-            game_state = title_screen(screen)
+            game_state = title_screen(screen, 0)
         elif game_state == GameState.OPTIONS:
             game_state = options_screen(screen)
+        elif game_state == GameState.PREGAME:
+            game_state = pregame_screen(screen)
         elif game_state == GameState.QUIT:
             running = False
          
