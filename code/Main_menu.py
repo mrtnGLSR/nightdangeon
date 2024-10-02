@@ -141,7 +141,7 @@ def title_screen(screen, state_level):
         for event in pygame.event.get():
                 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                pygame.mixer.Channel(0).play(pygame.mixer.Sound(button_sfx))# Joue le sfx de quannd on appuies sur la souris
+                pygame.mixer.Channel(0).play(button_sfx)# Joue le sfx de quannd on appuies sur la souris
                 mouse_up = True
             if event.type == pygame.QUIT:
                 return GameState.QUIT
@@ -159,7 +159,7 @@ def title_screen(screen, state_level):
 def options_screen(screen): 
     with open(file_path, 'r') as infile:
         settings = json.load(infile)
-
+    
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Options')
     # Gestion sound effects et musique
@@ -169,6 +169,7 @@ def options_screen(screen):
     sfx_text = UIElement(center_position=(520, 350), font_size=40, bg_rgb=WHITE, text_rgb=WHITE, text='Sfx')
     slider_sfx = Slider(screen, 450, 400, 150, 15, min=0, max=100, step=1,colour=(255, 255, 255),  handleColour=(89, 110, 127))
     slider_sfx.setValue(settings['volume_sfx'])
+    
     # Menu déroulant
     while running:
         mouse_up = False
