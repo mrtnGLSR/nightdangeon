@@ -36,7 +36,7 @@ class Camera():
                 relativeCharged = [playerBlock[2] - viewDistance + x, playerBlock[3] - viewDistance + y]
                 relativeChargedList.append(relativeCharged)
                 # définir la position relative au bon format
-                chargedBlockList.append([position[0] + relativeCharged[0] // nbBlocksX, position[1] + relativeCharged[1] // nbBlocksY, relativeCharged[0] % nbBlocksX, relativeCharged[1] % nbBlocksY])
+                chargedBlockList.append([position[0] + relativeCharged[0] // (nbBlocksX - 1), position[1] + relativeCharged[1] // (nbBlocksY - 1), relativeCharged[0] % (nbBlocksX - 1), relativeCharged[1] % (nbBlocksY - 1)])
 
         #débug ---------------------
         # for y1 in range(nbChunkY):
@@ -59,10 +59,9 @@ class Camera():
         # charger les images sur l'écran
         index = 0
         for i in chargedBlockList:
-            print(i)
-            screen.blit(images[map[int(i[0] // 1)][int(i[1] // 1)].chunkContent[i[2]][i[3]].texture], [(int(relativeChargedList[index][0] - viewDistance + 1 + round(position[2] % 1, 1)) * 10 * zoom), int((relativeChargedList[index][1] - viewDistance + round(position[3] % 1, 1)) * 10 * zoom)])
-            print("luca le goat --------------")
-            print(int(i[0] // 1))
-            print(i[0])
+            try:
+                screen.blit(images[map[int(i[0])][int(i[1])].chunkContent[int(i[2])][int(i[3])].texture], [(relativeChargedList[index][0] - viewDistance + 1 + round(position[2] % 1, 1)) * 10 * zoom, (relativeChargedList[index][1] - viewDistance + round(position[3] % 1, 1)) * 10 * zoom])
+            except:
+                pass
             index += 1
         pygame.display.flip()

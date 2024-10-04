@@ -6,6 +6,8 @@ nbChunkY = 8
 map = []
 nbMapPoints = 6
 mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
+startPoint = []
+endPoint = []
 
 # modules
 import copy
@@ -21,6 +23,7 @@ class Chunk:
 
 # fonction de génération de la map
 def GenMap():
+    global startPoint, endPoint
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
@@ -37,6 +40,8 @@ def GenMap():
     for point in range(nbMapPoints):
         pointMap.append([random.randint(0, nbChunkY - 1), random.randint(0, nbChunkX - 1)])
     
+    startPoint = pointMap[0]
+    endPoint = pointMap[-1]
     # relier les points entre eux
     for point in range(nbMapPoints - 1):
         # x et y

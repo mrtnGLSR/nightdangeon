@@ -23,8 +23,13 @@ running = True
 # importer la camera
 from Engine import *
 
+# génération de la map
+GenMap()
+
 # création du joueur
-player = Player([5, 5, 5, 5])
+print("startpoint:")
+print(startPoint)
+player = Player([startPoint[0], startPoint[1], 4, 4])
 
 # Chargement de la carte 
 # Taille des tuiles = 80 pixels
@@ -45,8 +50,10 @@ while running:
     
 
     player.refresh()
-    player.move(0.1, 0)
+    # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à environ 70 ms
-    pygame.time.delay(1000)
+    pygame.time.delay(50)
+    player.move(0, 0.1)
+    print("player-position" + str(player.position))
 pygame.quit()

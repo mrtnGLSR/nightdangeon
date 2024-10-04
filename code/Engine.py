@@ -29,6 +29,26 @@ class Entity(Solide):
         def defineBlockList(self, direction):
             blocklist=[]
 
+            # vérification de la position dans l'espace pour ne pas sortir de la map
+            # nbChunkChecked = 2
+            # if self.position[{"E":, "O":, "S":, "N"}[direction]] == nbChunkX:
+            #     nbChunkChecked = 1
+            # # boucle par chunk traité
+            # for chunkCheckNumber in range(nbChunkChecked):
+            #     # définir une position virtuelle comme point de départ en terme de traitment des chunks
+            #     positionInChunk = copy(self.position)
+            #     # changer la position si le chunk à traiter change
+            #     if chunkCheckNumber == 1:
+            #         positionInChunk[0] = 0
+            #         positionInChunk[2] += 1
+            #     # traiter le chunk block par block
+            #     for i in range(nbBlocksX):
+            #         # terminer le traitement du chunk si l'index arrive à la fin
+            #         if i + positionInChunk[0] == nbBlocksX:
+            #             break
+            #         # ajouter le block à la liste de blocks en fonction des objets sur la map
+            #         blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
+
             # vérification Est 
             if direction == "E":
                 # vérification de la position dans l'espace pour ne pas sortir de la map
@@ -38,7 +58,7 @@ class Entity(Solide):
                 # boucle par chunk traité
                 for chunkCheckNumber in range(nbChunkChecked):
                     # définir une position virtuelle comme point de départ en terme de traitment des chunks
-                    positionInChunk = copy(self.position)
+                    positionInChunk = [int(self.position[0]), int(self.position[1]), int(self.position[2]), int(self.position[3])]
                     # changer la position si le chunk à traiter change
                     if chunkCheckNumber == 1:
                         positionInChunk[0] = 0
@@ -57,7 +77,7 @@ class Entity(Solide):
                 if self.position[2] == 0:
                     nbChunkChecked = 1
                 for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
+                    positionInChunk = [int(self.position[0]), int(self.position[1]), int(self.position[2]), int(self.position[3])]
                     if chunkCheckNumber == 1:
                         positionInChunk[0] = nbBlocksX -1
                         positionInChunk[2] -= 1
@@ -66,14 +86,14 @@ class Entity(Solide):
                             break
                         print(chunkCheckNumber)
                         blocklist.append(map[positionInChunk[3]][positionInChunk[2] - chunkCheckNumber].chunkContent[int(positionInChunk[1])][int(positionInChunk[0]) - i])
-
+# 
             # vérification Sude
             if direction == "S":
                 nbChunkChecked = 2
                 if self.position[1] == nbChunkY:
                     nbChunkChecked = 1
                 for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
+                    positionInChunk = [int(self.position[0]), int(self.position[1]), int(self.position[2]), int(self.position[3])]
                     if chunkCheckNumber == 1:
                         positionInChunk[1] = 0
                         positionInChunk[3] += 1
@@ -81,14 +101,14 @@ class Entity(Solide):
                         if i + positionInChunk[1] == nbBlocksY:
                             break
                         blocklist.append(map[positionInChunk[3] + chunkCheckNumber ][positionInChunk[2]].chunkContent[i + int(positionInChunk[1])][int(positionInChunk[0])])
-
+#
             # vérification Nord
             if direction == "N":
                 nbChunkChecked = 2
                 if self.position[1] == 0:
                     nbChunkChecked = 1
                 for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
+                    positionInChunk = [int(self.position[0]), int(self.position[1]), int(self.position[2]), int(self.position[3])]
                     if chunkCheckNumber == 1:
                         positionInChunk[1] = nbBlocksY -1
                         positionInChunk[3] -= 1
@@ -128,7 +148,7 @@ class Entity(Solide):
         
         # définir l'objet le plus proche en fonction du sens
         closerBlock = checkCloserobject(self, defineBlockList(self, sens), sens)
-
+        closerBlock = 1
         # identifier si la distance est plus grande que le mouvement
         if sens in ["E", "O"]:
             if closerBlock <= (xMove ** 2) ** 0.5:
@@ -139,22 +159,24 @@ class Entity(Solide):
 
         # détection des changementes de chunks
         #   position x
-        if self.position[0] + xMove >= nbBlocksX:
-            self.position[2] += int((self.position[0] + xMove) // nbBlocksX)
-        if self.position[0] + xMove < nbBlocksX:
-            self.position[2] -= int((self.position[0] + xMove) // nbBlocksX)
+        #if self.position[0] + xMove >= nbBlocksX:
+        #    self.position[2] += int((self.position[0] + xMove) // nbBlocksX)
+        #if self.position[0] + xMove < nbBlocksX:
+        #    self.position[2] -= int((self.position[0] + xMove) // nbBlocksX)
         #   position y
-        if self.position[1] + yMove >= nbBlocksY:
-            self.position[3] += int((self.position[1] + yMove) // nbBlocksY)
-        if self.position[1] + yMove < nbBlocksY:
-            self.position[3] -= int((self.position[1] + yMove) // nbBlocksY)
+        #if self.position[1] + yMove >= nbBlocksY:
+        #    self.position[3] += int((self.position[1] + yMove) // nbBlocksY)
+        #if self.position[1] + yMove < nbBlocksY:
+        #    self.position[3] -= int((self.position[1] + yMove) // nbBlocksY)
         # changement de position
-        self.position[0] += (xMove % (nbBlocksX))
-        self.position[1] += (yMove % (nbBlocksY))
+        print("ymove : " + str(yMove))
+        self.position = [int(self.position[0] + (self.position[2] + xMove) // (nbBlocksX - 1)), int(self.position[1] + (self.position[3] + yMove) // (nbBlocksY - 1)), round((self.position[2] + xMove) % (nbBlocksX - 1), 1), round((self.position[3] + yMove) % (nbBlocksY -1), 1)]
+        #self.position[2] += (xMove % (nbBlocksX))
+        #self.position[3] += (yMove % (nbBlocksY))
 
         # arrondire les nombres
-        for i in range(2):
-            self.position[i] = (round(self.position[i], 1))
+        #for i in range(2):
+        #    self.position[i] = (round(self.position[i + 2], 1))
 
 # définition du joueur
 class Player(Entity):
