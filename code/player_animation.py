@@ -14,7 +14,9 @@ up = False
 down = False
 right = False
 left = False
+attack = False
 walkCount = 0 # walkcount is the number of the frame during the animations
+attackCount = 0
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2
 # Dictionary
@@ -30,6 +32,8 @@ walk_down = []
 walk_right = []
 walk_left = []
 walk_static = []
+attack_right = []
+attack_left = []
 
 
 
@@ -48,6 +52,17 @@ StaticSprite('left')
 
 
 
+class AttackSprite():
+    def __init__(self, name, list_add):
+        super().__init__()
+        for i in range(11):
+            i += 1
+            image_static = pygame.image.load(os.path.join('./img', f'Player_attack_{name}_{i}.png'))# load the image
+            image_static = pygame.transform.scale(image_static, (110, 165))# resize the image
+            list_add.append(image_static)
+
+AttackSprite('right', attack_right)
+AttackSprite('left', attack_left)
 
 
 # This for load all images needed to make the animations
@@ -73,14 +88,22 @@ for i  in range(6):
 
 # The function redrawGameWindow draw all images of the animation and update the window
 def redrawGameWindow():
-    global walkCount, last_movement
+    global walkCount, last_movement, attackCount
     # Apply a background color
     screen.fill((255,0,0))  
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
-        
-    if up:  # If we are facing up
+    if attackCount + 1 >= 11:
+        attackCount = 0
+    if attack:
+        if last_movement == 3:
+            screen.blit(attack_right[attackCount], (image_cords['x'],image_cords['y']))
+            attackCount += 1
+        if last_movement == 4:
+            screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))
+            attackCount += 1
+    elif up:  # If we are facing up
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
         walkCount += 1
         last_movement = 1 
@@ -98,15 +121,17 @@ def redrawGameWindow():
         screen.blit(walk_left[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 4
-    else:  # If we are facing static
-        if last_movement == 1:# last direction the character move
-            screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
-        elif last_movement == 2:
-            screen.blit(walk_static[1], (image_cords['x'],image_cords['y']))
-        elif last_movement == 3:
-            screen.blit(walk_static[2], (image_cords['x'],image_cords['y'])) 
-        elif last_movement == 4:
-            screen.blit(walk_static[3], (image_cords['x'],image_cords['y'])) 
+    
+    else:
+        if attack == False:  # If we are facing static
+            if last_movement == 1:# last direction the character move
+                screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
+            elif last_movement == 2:
+                screen.blit(walk_static[1], (image_cords['x'],image_cords['y']))
+            elif last_movement == 3:
+                screen.blit(walk_static[2], (image_cords['x'],image_cords['y'])) 
+            elif last_movement == 4:
+                screen.blit(walk_static[3], (image_cords['x'],image_cords['y'])) 
     pygame.display.update() 
 
 # adding the character on the window at the starting
@@ -136,24 +161,32 @@ while running:
             right = False
             down = False
             left = False
+            attack = False
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:  # if the keys to go down are pressed
             up = False
             right = False
             down = True
             left = False
+            attack = False
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]: # if the keys to go right are pressed
             up = False
             right = True
             down = False
+            attack = False
             left = False
         elif keys[pygame.K_a] or keys[pygame.K_LEFT]: # if the keys to go left are pressed
             up = False
             right = False
             down = False
             left = True
+            attack = False
         else:
-            up = right = down = left = False # if no keys is pressed he was static
+            up = right = down = left= attack = False # if no keys is pressed he was static
             walkCount = 0
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            attack = True
+        
+            
 
     redrawGameWindow()
 # Uninitialize all pygame modules
