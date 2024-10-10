@@ -115,6 +115,7 @@ class Entity(Solide):
                     for i in range(nbBlocksY):
                         if positionInChunk[1] - i <= 0:
                             break
+                        print("list positions analysées :", positionInChunk)
                         blocklist.append(map[positionInChunk[3] - chunkCheckNumber][positionInChunk[2]].chunkContent[int(positionInChunk[1]) - i][int(positionInChunk[0])])
             return(blocklist)
         
@@ -147,15 +148,15 @@ class Entity(Solide):
             sens = "S"
         
         # définir l'objet le plus proche en fonction du sens
-        closerBlock = checkCloserobject(self, defineBlockList(self, sens), sens)
-        closerBlock = 1
+        #closerBlock = checkCloserobject(self, defineBlockList(self, sens), sens)
+        #closerBlock = 1
         # identifier si la distance est plus grande que le mouvement
-        if sens in ["E", "O"]:
-            if closerBlock <= (xMove ** 2) ** 0.5:
-                xMove = closerBlock * {"E":1, "O":-1}[sens]
-        if sens in ["N", "S"]:
-            if closerBlock <= (yMove ** 2) ** 0.5:
-                yMove = closerBlock * {"N":1, "S":-1}[sens]
+        #if sens in ["E", "O"]:
+        #    if closerBlock <= (xMove ** 2) ** 0.5:
+        #        xMove = closerBlock * {"E":1, "O":-1}[sens]
+        #if sens in ["N", "S"]:
+        #    if closerBlock <= (yMove ** 2) ** 0.5:
+        #        yMove = closerBlock * {"N":1, "S":-1}[sens]
 
         # détection des changementes de chunks
         #   position x

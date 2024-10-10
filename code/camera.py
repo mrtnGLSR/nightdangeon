@@ -60,7 +60,7 @@ class Camera():
         index = 0
         for i in chargedBlockList:
             try:
-                screen.blit(images[map[int(i[0])][int(i[1])].chunkContent[int(i[2])][int(i[3])].texture], [(relativeChargedList[index][0] - viewDistance + 1 + round(position[2] % 1, 1)) * 10 * zoom, (relativeChargedList[index][1] - viewDistance + round(position[3] % 1, 1)) * 10 * zoom])
+                screen.blit(images[map[int(i[0])][int(i[1])].chunkContent[int(i[2])][int(i[3])].texture], [(i[2] + viewDistance + 1 - round(position[2], 1) + (i[0] - position[0]) * nbBlocksX) * 10 * zoom, (i[3] + viewDistance + 1 - round(position[3], 1) + (i[1] - position[1]) * nbBlocksY) * 10 * zoom])
             except:
                 pass
             index += 1
