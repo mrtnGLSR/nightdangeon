@@ -14,9 +14,9 @@ up = False
 down = False
 right = False
 left = False
-walkCount = 0
-# 1=up, 2=down
-last_movement = 0
+walkCount = 0 # walkcount is the number of the frame during the animations
+# 1=up, 2=down, 3=right, 4=left
+last_movement = 2
 # Dictionary
 
 image_cords = {
@@ -32,12 +32,15 @@ walk_left = []
 walk_static = []
 
 
+
+# Class StatiSprite load all the static image for the animation
 class StaticSprite():
     def __init__(self, name):
         super().__init__()
-        image_static = pygame.image.load(os.path.join('./img', f'Player_{name}_static.png'))
-        image_static = pygame.transform.scale(image_static, (110, 165))
-        walk_static.append(image_static) 
+        image_static = pygame.image.load(os.path.join('./img', f'Player_{name}_static.png'))# load the image
+        image_static = pygame.transform.scale(image_static, (110, 165))# resize the image
+        walk_static.append(image_static) # add to the static list
+# Call StaticSprite class
 StaticSprite('up')
 StaticSprite('down')
 StaticSprite('right')
@@ -47,7 +50,7 @@ StaticSprite('left')
 
 
 
-# list of sprites
+# This for load all images needed to make the animations
 for i  in range(6):
     i += 1
     image_up = pygame.image.load(os.path.join('./img', f'Player_run_up_{i}.png'))
@@ -68,12 +71,12 @@ for i  in range(6):
 
 
 
-
+# The function redrawGameWindow draw all images of the animation and update the window
 def redrawGameWindow():
     global walkCount, last_movement
-    
+    # Apply a background color
     screen.fill((255,0,0))  
-
+    # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
         
@@ -81,22 +84,22 @@ def redrawGameWindow():
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
         walkCount += 1
         last_movement = 1 
-    elif down:
+    elif down: # If we are facing down
         screen.blit(walk_down[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 2
-    elif right:
+    elif right: # If we are facing right
         pygame.time.delay(85)
         screen.blit(walk_right[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 3
-    elif left:
+    elif left: # If we are facing left
         pygame.time.delay(85)
         screen.blit(walk_left[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 4
-    else:
-        if last_movement == 1:
+    else:  # If we are facing static
+        if last_movement == 1:# last direction the character move
             screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
         elif last_movement == 2:
             screen.blit(walk_static[1], (image_cords['x'],image_cords['y']))
@@ -106,45 +109,50 @@ def redrawGameWindow():
             screen.blit(walk_static[3], (image_cords['x'],image_cords['y'])) 
     pygame.display.update() 
 
+# adding the character on the window at the starting
+redrawGameWindow()
+
+
 running = True
 while running:
     clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    # add keys event
     keys = pygame.key.get_pressed()
     
     if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]):
-        # Statique si up et down sont enfoncés simultanément
+        # Static if up and down is pressed in the same time
         up = down = right = left = False
         walkCount = 0
     elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and (keys[pygame.K_a] or keys[pygame.K_LEFT]):
-        # Statique si up et down sont enfoncés simultanément
-        right = left = up = down = False
+        # Static if right and left is pressed in the same time
+        up = down = right = left = False
         walkCount = 0
     else:
-        if keys[pygame.K_w] or keys[pygame.K_UP]: 
+        if keys[pygame.K_w] or keys[pygame.K_UP]: # if the keys to go up are pressed
             up = True
             right = False
             down = False
             left = False
-        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:  
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:  # if the keys to go down are pressed
             up = False
             right = False
             down = True
             left = False
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]: 
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]: # if the keys to go right are pressed
             up = False
             right = True
             down = False
             left = False
-        elif keys[pygame.K_a] or keys[pygame.K_LEFT]: 
+        elif keys[pygame.K_a] or keys[pygame.K_LEFT]: # if the keys to go left are pressed
             up = False
             right = False
             down = False
             left = True
         else:
-            up = right = down = left = False
+            up = right = down = left = False # if no keys is pressed he was static
             walkCount = 0
 
     redrawGameWindow()
