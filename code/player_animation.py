@@ -19,6 +19,8 @@ left = False
 attack = False
 walkCount = 0 # walkcount is the number of the frame during the animations for the walk
 attackCount = 0 # walkcount is the number of the frame during the animations for the attack
+lifeState = 3
+
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2 # set default orientation
 # Dictionary
@@ -28,6 +30,8 @@ image_cords = {
 }
 
 # Load sword sfx
+
+
 sword_sfx = pygame.mixer.Sound('./sfx/sword_avoid_slash.mp3')
 
 # Lists
@@ -40,6 +44,7 @@ attack_right = []
 attack_left = []
 attack_down = []
 attack_up = []
+heath = []
 
 # This for load all images needed to make the animations
 class LoadSprites:
@@ -64,15 +69,46 @@ LoadSprites('static', 'up', walk_static, 1)
 LoadSprites('static', 'down', walk_static, 1)
 LoadSprites('static', 'right', walk_static, 1)
 LoadSprites('static', 'left', walk_static, 1)
-
-
+ 
+class LifeSprite():
+    def __init__(self, name):
+        super().__init__()
+        image_hearth = pygame.image.load(os.path.join('./img', f'{name}.png'))
+        image_hearth = pygame.transform.scale(image_hearth, (60, 60))
+        heath.append(image_hearth)
+LifeSprite('hearth')
+LifeSprite('death_hearth')
 
 
 # The function redrawGameWindow draw all images of the animation and update the window
 def redrawGameWindow():
     global walkCount, last_movement, attackCount
     # Apply a background color
-    screen.fill((255,0,0))  
+    screen.fill((0,30,30))  
+    if lifeState == 1:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[1], (40,0))
+        screen.blit(heath[1], (80,0))
+    if lifeState == 2:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[0], (40,0))
+        screen.blit(heath[1], (80,0))
+    if lifeState == 3:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[0], (40,0))
+        screen.blit(heath[0], (80,0))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
@@ -152,15 +188,16 @@ while running:
             running = False
     # add keys event
     keys = pygame.key.get_pressed()
-    
     if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]):
         # Static if up and down is pressed in the same time
         up = down = right = left = False
         walkCount = 0
+        
     elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and (keys[pygame.K_a] or keys[pygame.K_LEFT]):
         # Static if right and left is pressed in the same time
         up = down = right = left = False
         walkCount = 0
+        
     else:
         if keys[pygame.K_w] or keys[pygame.K_UP]: # if the keys to go up are pressed
             up = True
