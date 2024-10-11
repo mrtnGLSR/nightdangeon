@@ -19,16 +19,28 @@ left = False
 attack = False
 walkCount = 0 # walkcount is the number of the frame during the animations for the walk
 attackCount = 0 # walkcount is the number of the frame during the animations for the attack
+<<<<<<< Updated upstream
+=======
+dieCount = 0
+lifeState = 3
+
+>>>>>>> Stashed changes
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2 # set default orientation
 # Dictionary
 image_cords = {
-    "y" : ((screen.get_height()) / 2) - 82.5,# position of the player in height ([window height] / 2 - [Player image size /2])
-    "x" : ((screen.get_width()) / 2) - 55 # position of the player in width ([window width] / 2 - [Player image size /2])
+    'y' : ((screen.get_height()) / 2) - 82.5,# position of the player in height ([window height] / 2 - [Player image size /2])
+    'x' : ((screen.get_width()) / 2) - 55 # position of the player in width ([window width] / 2 - [Player image size /2])
 }
 
+<<<<<<< Updated upstream
 # Load sword sfx
+=======
+
+# Load sfx
+>>>>>>> Stashed changes
 sword_sfx = pygame.mixer.Sound('./sfx/sword_avoid_slash.mp3')
+die_sfx = pygame.mixer.Sound('./sfx/die_SFX.mp3')
 
 # Lists
 walk_up = []
@@ -40,18 +52,24 @@ attack_right = []
 attack_left = []
 attack_down = []
 attack_up = []
+<<<<<<< Updated upstream
 
+=======
+heath = []
+die = []
+>>>>>>> Stashed changes
 # This for load all images needed to make the animations
 class LoadSprites:
-    def __init__(self, position, orientation, list_add, range_number):
+    def __init__(self, position, orientation, list_add, range_number, size):
         super().__init__()
         for i  in range(range_number):
             i += 1
             image = pygame.image.load(os.path.join('./img', f'Player_{position}_{orientation}_{i}.png'))
-            image = pygame.transform.scale(image, (110, 165))
+            image = pygame.transform.scale(image, size)
             list_add.append(image)
             
 # All class calls
+<<<<<<< Updated upstream
 LoadSprites('run', 'up', walk_up, 6)
 LoadSprites('run', 'down', walk_down, 6)
 LoadSprites('run', 'left', walk_left, 6)
@@ -66,13 +84,66 @@ LoadSprites('static', 'right', walk_static, 1)
 LoadSprites('static', 'left', walk_static, 1)
 
 
+=======
+LoadSprites('run', 'up', walk_up, 6, (110, 165))
+LoadSprites('run', 'down', walk_down, 6, (110, 165))
+LoadSprites('run', 'left', walk_left, 6, (110, 165))
+LoadSprites('run', 'right', walk_right, 6, (110, 165))
+LoadSprites('attack', 'right', attack_right, 11, (110, 165))
+LoadSprites('attack', 'left', attack_left, 11, (110, 165))
+LoadSprites('attack', 'down', attack_down, 6, (110, 165))
+LoadSprites('attack', 'up', attack_up, 3, (110, 165))
+LoadSprites('static', 'up', walk_static, 1, (110, 165))
+LoadSprites('static', 'down', walk_static, 1, (110, 165))
+LoadSprites('static', 'right', walk_static, 1, (110, 165))
+LoadSprites('static', 'left', walk_static, 1, (110, 165))
+LoadSprites('die', 'down', die, 2, (110, 165))
+LoadSprites('die', 'floor', die, 1, (165, 110))
+class LifeSprite():
+    def __init__(self, name):
+        super().__init__()
+        image_hearth = pygame.image.load(os.path.join('./img', f'{name}.png'))
+        image_hearth = pygame.transform.scale(image_hearth, (60, 60))
+        heath.append(image_hearth)
+LifeSprite('hearth')
+LifeSprite('death_hearth')
+>>>>>>> Stashed changes
 
 
 # The function redrawGameWindow draw all images of the animation and update the window
 def redrawGameWindow():
-    global walkCount, last_movement, attackCount
+    global walkCount, last_movement, attackCount, dieCount
     # Apply a background color
+<<<<<<< Updated upstream
     screen.fill((255,0,0))  
+=======
+    screen.fill((0,30,30))  
+    if lifeState == 1:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[1], (40,0))
+        screen.blit(heath[1], (80,0))
+    if lifeState == 2:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[0], (40,0))
+        screen.blit(heath[1], (80,0))
+    if lifeState == 3:
+        screen.blit(heath[0], (0,0))
+        screen.blit(heath[0], (40,0))
+        screen.blit(heath[0], (80,0))
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+>>>>>>> Stashed changes
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
@@ -109,6 +180,15 @@ def redrawGameWindow():
                 sword_sfx.play()
             screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
             attackCount += 1
+    elif lifeState == 0:
+        pygame.time.delay(500)
+        if dieCount != 2:
+            screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
+            die_sfx.play() 
+        if dieCount == 2:
+            screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
+        if dieCount < 2:
+            dieCount += 1
     elif up:  # If we are facing up
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
         walkCount += 1
@@ -186,6 +266,8 @@ while running:
             down = False
             left = True
             attack = False
+        elif keys[pygame.K_o]:
+            lifeState = 0
         else:
             up = right = down = left= attack = False # if no keys is pressed he was static
             walkCount = 0
