@@ -1,3 +1,4 @@
+# import
 import pygame
 import os
 
@@ -8,6 +9,7 @@ clock = pygame.time.Clock()
 # window configuration
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Player Animation")
+pygame.mouse.set_visible(False)
 
 # Variables
 up = False
@@ -15,16 +17,18 @@ down = False
 right = False
 left = False
 attack = False
-walkCount = 0 # walkcount is the number of the frame during the animations
-attackCount = 0
+walkCount = 0 # walkcount is the number of the frame during the animations for the walk
+attackCount = 0 # walkcount is the number of the frame during the animations for the attack
 # 1=up, 2=down, 3=right, 4=left
-last_movement = 2
+last_movement = 2 # set default orientation
 # Dictionary
-
 image_cords = {
-    "y" : ((screen.get_height()) / 2) - 82.5,
-    "x" : ((screen.get_width()) / 2) - 55
+    "y" : ((screen.get_height()) / 2) - 82.5,# position of the player in height ([window height] / 2 - [Player image size /2])
+    "x" : ((screen.get_width()) / 2) - 55 # position of the player in width ([window width] / 2 - [Player image size /2])
 }
+
+# Load sword sfx
+sword_sfx = pygame.mixer.Sound('./sfx/sword_avoid_slash.mp3')
 
 # Lists
 walk_up = []
@@ -34,54 +38,32 @@ walk_left = []
 walk_static = []
 attack_right = []
 attack_left = []
-
-
-
-# Class StatiSprite load all the static image for the animation
-class StaticSprite():
-    def __init__(self, name):
-        super().__init__()
-        image_static = pygame.image.load(os.path.join('./img', f'Player_{name}_static.png'))# load the image
-        image_static = pygame.transform.scale(image_static, (110, 165))# resize the image
-        walk_static.append(image_static) # add to the static list
-# Call StaticSprite class
-StaticSprite('up')
-StaticSprite('down')
-StaticSprite('right')
-StaticSprite('left')
-
-
-
-class AttackSprite():
-    def __init__(self, name, list_add):
-        super().__init__()
-        for i in range(11):
-            i += 1
-            image_static = pygame.image.load(os.path.join('./img', f'Player_attack_{name}_{i}.png'))# load the image
-            image_static = pygame.transform.scale(image_static, (110, 165))# resize the image
-            list_add.append(image_static)
-
-AttackSprite('right', attack_right)
-AttackSprite('left', attack_left)
-
+attack_down = []
+attack_up = []
 
 # This for load all images needed to make the animations
-for i  in range(6):
-    i += 1
-    image_up = pygame.image.load(os.path.join('./img', f'Player_run_up_{i}.png'))
-    image_up = pygame.transform.scale(image_up, (110, 165))
-    walk_up.append(image_up)
-    image_down = pygame.image.load(os.path.join('./img', f'Player_run_down_{i}.png'))
-    image_down = pygame.transform.scale(image_down, (110, 165))
-    walk_down.append(image_down)
-    image_right = pygame.image.load(os.path.join('./img', f'Player_run_right_{i}.png'))
-    image_right = pygame.transform.scale(image_right, (110, 165))
-    walk_right.append(image_right)
-    image_left = pygame.image.load(os.path.join('./img', f'Player_run_left_{i}.png'))
-    image_left = pygame.transform.scale(image_left, (110, 165))
-    walk_left.append(image_left)
-
-
+class LoadSprites:
+    def __init__(self, position, orientation, list_add, range_number):
+        super().__init__()
+        for i  in range(range_number):
+            i += 1
+            image = pygame.image.load(os.path.join('./img', f'Player_{position}_{orientation}_{i}.png'))
+            image = pygame.transform.scale(image, (110, 165))
+            list_add.append(image)
+            
+# All class calls
+LoadSprites('run', 'up', walk_up, 6)
+LoadSprites('run', 'down', walk_down, 6)
+LoadSprites('run', 'left', walk_left, 6)
+LoadSprites('run', 'right', walk_right, 6)
+LoadSprites('attack', 'right', attack_right, 11)
+LoadSprites('attack', 'left', attack_left, 11)
+LoadSprites('attack', 'down', attack_down, 6)
+LoadSprites('attack', 'up', attack_up, 3)
+LoadSprites('static', 'up', walk_static, 1)
+LoadSprites('static', 'down', walk_static, 1)
+LoadSprites('static', 'right', walk_static, 1)
+LoadSprites('static', 'left', walk_static, 1)
 
 
 
@@ -94,14 +76,38 @@ def redrawGameWindow():
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
+    # if the frame is over 11 the variable is reset
     if attackCount + 1 >= 11:
         attackCount = 0
     if attack:
-        if last_movement == 3:
-            screen.blit(attack_right[attackCount], (image_cords['x'],image_cords['y']))
+        if last_movement == 1: # if the last movement is up
+            if attackCount +1 >=4: # if the frame is over 3 the variable is reset
+                attackCount = 0
+            pygame.time.delay(160) # Delay for the sync of the animations
+            if attackCount == 2: # if the animation is in the middle 
+                sword_sfx.play()
+            screen.blit(attack_up[attackCount], (image_cords['x'],image_cords['y'])) # Draw the animations
             attackCount += 1
-        if last_movement == 4:
-            screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))
+        
+        if last_movement == 2:# if the last movement is down
+            if attackCount + 1 >=7: # if the frame is over 7 the variable is reset
+                attackCount = 0
+            pygame.time.delay(80)# Delay for the sync of the animations
+            if attackCount == 3: # if the animation is in the middle 
+                sword_sfx.play()
+            screen.blit(attack_down[attackCount], (image_cords['x'],image_cords['y'])) # Draw the animations
+            attackCount += 1
+       
+        if last_movement == 3:# if the last movement is right
+            if attackCount == 6:# if the animation is in the middle 
+                sword_sfx.play()
+            screen.blit(attack_right[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
+            attackCount += 1
+       
+        if last_movement == 4:# if the last movement is left
+            if attackCount == 6:# if the animation is in the middle
+                sword_sfx.play()
+            screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
             attackCount += 1
     elif up:  # If we are facing up
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
@@ -140,7 +146,7 @@ redrawGameWindow()
 
 running = True
 while running:
-    clock.tick(30)
+    clock.tick(20)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -183,7 +189,7 @@ while running:
         else:
             up = right = down = left= attack = False # if no keys is pressed he was static
             walkCount = 0
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN: # if mouse boutton is pressed
             attack = True
         
             
