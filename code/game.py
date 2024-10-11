@@ -53,7 +53,7 @@ while running:
     # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à environ 70 ms
-    pygame.time.delay(50)
+    pygame.time.delay(100)
     player.move(0, 0.1)
     print("player-position" + str(player.position))
 pygame.quit()

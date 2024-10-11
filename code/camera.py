@@ -30,14 +30,13 @@ class Camera():
         # définir la position relative des bloques à charger
         chargedBlockList = []
         relativeChargedList = []
-        for x in range((viewDistance + 1) * 2 + 1):
-            for y in range((viewDistance + 1) * 2 + 1):
+        for x in range((viewDistance + 1) * 2 + 2):
+            for y in range((viewDistance + 1) * 2 + 2):
                 # définir la position relative
                 relativeCharged = [playerBlock[2] - viewDistance + x, playerBlock[3] - viewDistance + y]
                 relativeChargedList.append(relativeCharged)
                 # définir la position relative au bon format
-                chargedBlockList.append([position[0] + relativeCharged[0] // (nbBlocksX - 1), position[1] + relativeCharged[1] // (nbBlocksY - 1), relativeCharged[0] % (nbBlocksX - 1), relativeCharged[1] % (nbBlocksY - 1)])
-
+                chargedBlockList.append([position[0] + relativeCharged[0] // (nbBlocksX), position[1] + relativeCharged[1] // (nbBlocksY), relativeCharged[0] % (nbBlocksX), relativeCharged[1] % (nbBlocksY)])
         #débug ---------------------
         # for y1 in range(nbChunkY):
         #     for y2 in range(nbBlocksY):
@@ -58,9 +57,10 @@ class Camera():
 
         # charger les images sur l'écran
         index = 0
+        print(chargedBlockList)
         for i in chargedBlockList:
             try:
-                screen.blit(images[map[int(i[0])][int(i[1])].chunkContent[int(i[2])][int(i[3])].texture], [(i[2] + viewDistance + 1 - round(position[2], 1) + (i[0] - position[0]) * nbBlocksX) * 10 * zoom, (i[3] + viewDistance + 1 - round(position[3], 1) + (i[1] - position[1]) * nbBlocksY) * 10 * zoom])
+                screen.blit(images[map[int(i[0])][int(i[1])].chunkContent[int(i[2])][int(i[3])].texture], [(i[2] + viewDistance - round(position[2], 1) + (i[0] - position[0]) * (nbBlocksX + 1) + 1) * 10 * zoom, (i[3] + viewDistance - round(position[3], 1) + (i[1] - position[1]) * (nbBlocksY + 1) + 1) * 10 * zoom])
             except:
                 pass
             index += 1
