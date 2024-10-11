@@ -19,12 +19,17 @@ left = False
 attack = False
 walkCount = 0 # walkcount is the number of the frame during the animations for the walk
 attackCount = 0 # walkcount is the number of the frame during the animations for the attack
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 dieCount = 0
 lifeState = 3
 
 >>>>>>> Stashed changes
+=======
+lifeState = 3
+
+>>>>>>> Develop
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2 # set default orientation
 # Dictionary
@@ -35,10 +40,15 @@ image_cords = {
 
 <<<<<<< Updated upstream
 # Load sword sfx
+<<<<<<< HEAD
 =======
 
 # Load sfx
 >>>>>>> Stashed changes
+=======
+
+
+>>>>>>> Develop
 sword_sfx = pygame.mixer.Sound('./sfx/sword_avoid_slash.mp3')
 die_sfx = pygame.mixer.Sound('./sfx/die_SFX.mp3')
 
@@ -52,7 +62,11 @@ attack_right = []
 attack_left = []
 attack_down = []
 attack_up = []
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+heath = []
+>>>>>>> Develop
 
 =======
 heath = []
@@ -82,6 +96,7 @@ LoadSprites('static', 'up', walk_static, 1)
 LoadSprites('static', 'down', walk_static, 1)
 LoadSprites('static', 'right', walk_static, 1)
 LoadSprites('static', 'left', walk_static, 1)
+<<<<<<< HEAD
 
 
 =======
@@ -99,6 +114,9 @@ LoadSprites('static', 'right', walk_static, 1, (110, 165))
 LoadSprites('static', 'left', walk_static, 1, (110, 165))
 LoadSprites('die', 'down', die, 2, (110, 165))
 LoadSprites('die', 'floor', die, 1, (165, 110))
+=======
+ 
+>>>>>>> Develop
 class LifeSprite():
     def __init__(self, name):
         super().__init__()
@@ -107,16 +125,22 @@ class LifeSprite():
         heath.append(image_hearth)
 LifeSprite('hearth')
 LifeSprite('death_hearth')
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> Develop
 
 
 # The function redrawGameWindow draw all images of the animation and update the window
 def redrawGameWindow():
     global walkCount, last_movement, attackCount, dieCount
     # Apply a background color
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     screen.fill((255,0,0))  
 =======
+=======
+>>>>>>> Develop
     screen.fill((0,30,30))  
     if lifeState == 1:
         screen.blit(heath[0], (0,0))
@@ -130,7 +154,10 @@ def redrawGameWindow():
         screen.blit(heath[0], (0,0))
         screen.blit(heath[0], (40,0))
         screen.blit(heath[0], (80,0))
+<<<<<<< HEAD
 
+=======
+>>>>>>> Develop
     
     
     
@@ -143,7 +170,10 @@ def redrawGameWindow():
     
     
     
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> Develop
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
@@ -232,15 +262,16 @@ while running:
             running = False
     # add keys event
     keys = pygame.key.get_pressed()
-    
     if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]):
         # Static if up and down is pressed in the same time
         up = down = right = left = False
         walkCount = 0
+        
     elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and (keys[pygame.K_a] or keys[pygame.K_LEFT]):
         # Static if right and left is pressed in the same time
         up = down = right = left = False
         walkCount = 0
+        
     else:
         if keys[pygame.K_w] or keys[pygame.K_UP]: # if the keys to go up are pressed
             up = True
