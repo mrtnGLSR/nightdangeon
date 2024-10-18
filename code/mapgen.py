@@ -1,3 +1,4 @@
+
 # constants
 nbBlocksX = 9
 nbBlocksY = 9
@@ -8,11 +9,14 @@ nbMapPoints = 6
 mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
 startPoint = []
 endPoint = []
+mapSize =[nbBlocksX * nbChunkX, nbBlocksY * nbChunkY]
 
 # modules
 import copy
 import random
 from nodes import *
+
+print("génération de la map ...", end = '')
 
 # define chunks
 class Chunk:
@@ -23,7 +27,7 @@ class Chunk:
 
 # fonction de génération de la map
 def GenMap():
-    global startPoint, endPoint
+    global startPoint, endPoint, map
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
@@ -128,6 +132,22 @@ def GenMap():
                     if [x + i[1][0], y + i[1][1]] in wayMap:
                         chunkContent = grind(i[0], map[x][y].chunkType, chunkContent)
             map[x][y].chunkContent = chunkContent
+    
+    # changer le format de la map
+    mapTmp = copy.copy(map)
+    map = []
+    for ychunk in range(nbChunkY):
+        for yBlock in range(nbBlocksY):
+            map.append([])
+            for xchunk in range(nbChunkX):
+                for xBlock in range(nbBlocksX):
+                    map[-1].append(mapTmp[xchunk][ychunk].chunkContent[xBlock][yBlock])
+    
+    print(" fait", end = '\n')
+    
+
+
+
 
             
 GenMap()

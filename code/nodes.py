@@ -1,5 +1,7 @@
 # add nodes
 
+print("chargement des bloques ...", end = '')
+
 # définition des objets affichés
 class Solide:
     def __init__(self, draw, position, walkable, texture, solidID):
@@ -33,3 +35,5 @@ class BrickWall(Wall):
 class BrickFloor(Floor):
     def __init__(self):
         Floor.__init__(self, "brickFloor", 0)
+
+print(" fait", end = '\n')

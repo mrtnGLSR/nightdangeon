@@ -29,7 +29,7 @@ GenMap()
 # création du joueur
 print("startpoint:")
 print(startPoint)
-player = Player([startPoint[0], startPoint[1], 4, 4])
+player = Player([10,10])
 
 # Chargement de la carte 
 # Taille des tuiles = 80 pixels
@@ -54,6 +54,6 @@ while running:
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à environ 70 ms
     pygame.time.delay(100)
-    player.move(0, 0.1)
-    print("player-position" + str(player.position))
+    # player.move(0, 0.1)
+    # print("player-position" + str(player.position))
 pygame.quit()
