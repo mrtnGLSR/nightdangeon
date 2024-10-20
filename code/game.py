@@ -1,5 +1,5 @@
 # modules
-
+from time import time
 
 # from sprite import sprites   # Liste ou collection des sprites (objets visuels animés ou statiques)
 # from map import TileKind, Map # TileKind : Définit les types de tuiles (sol, mur, etc.)
@@ -29,7 +29,7 @@ GenMap()
 # création du joueur
 print("startpoint:")
 print(startPoint)
-player = Player([10,10])
+player = Player([3.6,4])
 
 # Chargement de la carte 
 # Taille des tuiles = 80 pixels
@@ -38,10 +38,11 @@ player = Player([10,10])
 
 # Boucle principale du jeu
 while running:
+    startTime = time()
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #arrêtez le jeu
             running = False  
-    # screen.fill(clear_color)  # Efface l'écran en remplissant avec la couleur de fond (noir)
+    screen.fill(clear_color)  # Efface l'écran en remplissant avec la couleur de fond (noir)
     
     # map.draw(screen)  # Dessine la carte (tuiles de sol, murs) sur l'écran
     
@@ -52,8 +53,9 @@ while running:
     player.refresh()
     # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
-    # Pause pour limiter la vitesse d'exécution de la boucle à environ 70 ms
-    pygame.time.delay(100)
-    # player.move(0, 0.1)
-    # print("player-position" + str(player.position))
+    # Pause pour limiter la vitesse d'exécution de la boucle à 0.1s
+    while time() < startTime + 0.05:
+        pass
+    player.move(0, 0.1)
+    print("player-position" + str(player.position))
 pygame.quit()

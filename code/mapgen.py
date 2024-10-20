@@ -43,6 +43,8 @@ def GenMap():
     # créer les points de connection des chemins
     for point in range(nbMapPoints):
         pointMap.append([random.randint(0, nbChunkY - 1), random.randint(0, nbChunkX - 1)])
+    # debug
+    pointMap[3] = [0, 0]
     
     startPoint = pointMap[0]
     endPoint = pointMap[-1]
