@@ -19,8 +19,8 @@ class Entity(Solide):
         self.camera = Camera(self)
 
     # fonction  de rafraichissement
-    def refresh(self, direction_up, direction_down, direction_left, direction_right, attack):
-        self.camera.refresh(direction_up,direction_down,direction_left,direction_right, attack, self.position)
+    def refresh(self, direction_up, direction_down, direction_left, direction_right, attack, life_state):
+        self.camera.refresh(direction_up,direction_down,direction_left,direction_right, attack, life_state, self.position)
 
 
     # fonction de mouvement

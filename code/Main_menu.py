@@ -7,7 +7,7 @@ import pygame_widgets
 import json
 from pathlib import Path
 from pygame_widgets.button import ButtonArray
-import os
+import subprocess
 
 # Variables
 running = True
@@ -99,6 +99,8 @@ class GameState(Enum):
     TITLE = 0
     OPTIONS = 1
     PREGAME = 2
+    LOADING = 3
+
     
 
 
@@ -209,49 +211,104 @@ def options_screen(screen):
         slider_music.draw()
         slider_sfx.draw()
         pygame.display.flip()
+def start_game():
+    print("Launching the game...")  # Debug
+    pygame.quit()
+    subprocess.run(["python", "./code/game.py"])
+def loading_screen(screen):
+    loading_font = pygame.freetype.Font("./fonts/OwreKynge.ttf", 50)
+    progress_bar_width = 600
+    progress_bar_height = 50
+    loading_text = "Loading..."
+    completed = 0
 
-def pregame_screen(screen): 
+    while completed < 100:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+        # Dessiner l'arrière-plan
+        scrolling_bg()
+
+        # Dessiner le texte de chargement
+        loading_surface, _ = loading_font.render(loading_text, (255, 255, 255))
+        screen.blit(loading_surface, (screen_width // 2 - loading_surface.get_width() // 2, screen_height // 2 - 100))
+
+        # Dessiner la barre de progression
+        pygame.draw.rect(screen, (255, 255, 255), (screen_width // 2 - progress_bar_width // 2, screen_height // 2, progress_bar_width, progress_bar_height))
+        pygame.draw.rect(screen, (0, 128, 0), (screen_width // 2 - progress_bar_width // 2, screen_height // 2, progress_bar_width * completed // 100, progress_bar_height))
+
+        # Simuler le chargement (ici on augmente simplement la valeur de completed)
+        pygame.time.delay(5)  # Délai pour voir la progression
+        completed += 1
+
+        # Mettre à jour l'affichage
+        pygame.display.flip()
+
+    # Retour à l'écran précédent (par exemple, le pré-jeu)
+    return GameState.PREGAME
+
+
+def pregame_screen(screen):
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Settings')
-    btn_easy = UIElement(center_position=(380, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Easy')
-    btn_normal = UIElement(center_position=(520, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Normal',)
-    btn_hard = UIElement(center_position=(660, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Hard',)
+    
+    btn_easy = UIElement(center_position=(380, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Easy', action=GameState.LOADING)
+    btn_normal = UIElement(center_position=(520, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Normal', action=GameState.LOADING)
+    btn_hard = UIElement(center_position=(660, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Hard', action=GameState.LOADING)
 
-    # Menu déroulant
     while running:
         mouse_up = False
-        events = pygame.event.get()  # Récupérer tous les événements
-        pygame_widgets.update(events)  # Mettre à jour les widgets avec tous les événements
+        events = pygame.event.get()
+        pygame_widgets.update(events)
         
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-                pygame.mixer.Channel(0).play(button_sfx) # Joue le sfx de quannd on appuies sur la souris
+                pygame.mixer.Channel(0).play(button_sfx)
             if event.type == pygame.QUIT:
                 return GameState.QUIT
 
         scrolling_bg()
         
-        # Mettre à jour et dessiner les autres éléments de l'UI
         Title.draw(screen)
-        ui_action = btn_easy.update(pygame.mouse.get_pos(), mouse_up)
-        ui_action = btn_normal.update(pygame.mouse.get_pos(), mouse_up)
-        ui_action = btn_hard.update(pygame.mouse.get_pos(), mouse_up)
-        ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
-        if ui_action is not None:
-            return ui_action
+        ui_action_easy = btn_easy.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action_normal = btn_normal.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action_hard = btn_hard.update(pygame.mouse.get_pos(), mouse_up)
+        ui_action_return = btn_return.update(pygame.mouse.get_pos(), mouse_up)
+
+        if ui_action_easy:
+            # Afficher l'écran de chargement lorsque le bouton Easy est pressé
+            loading_screen(screen)
+            start_game()  # Lancer le jeu après le chargement
+            return GameState.PREGAME  # Rester dans l'état pré-jeu après le démarrage
+        if ui_action_normal:
+            # Afficher l'écran de chargement lorsque le bouton Easy est pressé
+            loading_screen(screen)
+            start_game()  # Lancer le jeu après le chargement
+            return GameState.PREGAME  # Rester dans l'état pré-jeu après le démarrage
+        if ui_action_hard:
+            # Afficher l'écran de chargement lorsque le bouton Easy est pressé
+            loading_screen(screen)
+            start_game()  # Lancer le jeu après le chargement
+            return GameState.PREGAME  # Rester dans l'état pré-jeu après le démarrage
+        elif ui_action_return:
+            return ui_action_return  # Retourner à l'écran de titre
+        
         btn_return.draw(screen)
         btn_easy.draw(screen)
         btn_hard.draw(screen)
         btn_normal.draw(screen)
-        # Affichage du slider_music
+
         pygame.display.flip()
+
+
 
 
 def main():
     global running
     game_state = GameState.TITLE
-    
     while running:
         if game_state == GameState.TITLE:
             game_state = title_screen(screen, 0)
@@ -259,8 +316,11 @@ def main():
             game_state = options_screen(screen)
         elif game_state == GameState.PREGAME:
             game_state = pregame_screen(screen)
+        elif game_state == GameState.LOADING:
+            game_state = loading_screen(screen)  
         elif game_state == GameState.QUIT:
             running = False
+
          
 
 main()

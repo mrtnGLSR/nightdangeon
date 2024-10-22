@@ -7,6 +7,9 @@ screen_height = 1040
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Night Dungeon")
 
+red_filter = pygame.Surface((screen_width, screen_height))
+red_filter.fill((255, 0, 0))  # Remplir avec du rouge
+red_filter.set_alpha(128)
 # définir la camera
 camera = pygame.Rect(0,0,0,0)
 
@@ -19,3 +22,6 @@ def create_screen(width, heigh, title):
     camera.height = heigh
     return screen
 create_screen(screen_width, screen_height, "test")
+
+def death_screen():
+    screen.blit(red_filter, (0, 0))

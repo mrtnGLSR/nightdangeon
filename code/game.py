@@ -18,12 +18,7 @@ down = False
 right = False
 left = False
 attack_state = False
-# Définition des types de tuiles, avec une image et une propriété 
-# tile_kinds = [
-#     TileKind('floor', './img/brick-floor.jpg', False),  # Sol 
-#     TileKind('wall', './img/brick-wall.jpg', False)     # Mur 
-# ]
-
+lifeState = 3
 # importer la camera
 from Engine import *
 
@@ -42,6 +37,7 @@ player = Player([3.6,4])
 # Boucle principale du jeu
 while running:
     startTime = time()
+    print(lifeState)
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #arrêtez le jeu
             running = False  
@@ -64,12 +60,13 @@ while running:
         walkCount = 0
         
     else:
-        if keys[pygame.K_w] or keys[pygame.K_UP]: # if the keys to go up are pressed
-            up = True
-            right = False
-            down = False
-            left = False
-            attack_state = False
+        if keys[pygame.K_w] or keys[pygame.K_UP]:# if the keys to go up are pressed
+            if keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False: 
+                up = True
+                right = False
+                down = False
+                left = False
+                attack_state = False
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:  # if the keys to go down are pressed
             up = False
             right = False
@@ -96,7 +93,7 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN: # if mouse boutton is pressed
             attack_state = True
 
-    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right, attack=attack_state)
+    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
     # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à 0.1s

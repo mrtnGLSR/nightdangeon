@@ -11,13 +11,14 @@ zoom = 11
 #Variables
 walkCount = 0 # walkcount is the number of the frame during the animations for the walk
 attackCount = 0 # walkcount is the number of the frame during the animations for the attack
-up = False
-down = False
-right = False
-left = False
 attack = False
 dieCount = 0
-lifeState = 3
+
+
+
+
+
+
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2 # set default orientation
 # Dictionary
@@ -81,21 +82,34 @@ LifeSprite('hearth')
 LifeSprite('death_hearth')
 
 
-def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,attack):
+def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,attack, life_state):
     global walkCount, last_movement, attackCount, dieCount
     # Apply a background color
-    if lifeState == 1:
+    if life_state == 1:
         screen.blit(heath[0], (0,0))
         screen.blit(heath[1], (40,0))
         screen.blit(heath[1], (80,0))
-    if lifeState == 2:
+    if life_state == 2:
         screen.blit(heath[0], (0,0))
         screen.blit(heath[0], (40,0))
         screen.blit(heath[1], (80,0))
-    if lifeState == 3:
+    if life_state == 3:
         screen.blit(heath[0], (0,0))
         screen.blit(heath[0], (40,0))
         screen.blit(heath[0], (80,0))
+    if life_state == 0:
+        pygame.time.delay(500)
+        if dieCount != 2:
+            screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
+            death_screen()
+            die_sfx.play() 
+        if dieCount == 2:
+            screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
+            death_screen()
+            
+        if dieCount < 2:
+            dieCount += 1
+            
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
@@ -131,16 +145,7 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
                 sword_sfx.play()
             screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
             attackCount += 1
-    elif lifeState == 0:
-        pygame.time.delay(500)
-        if dieCount != 2:
-            screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
-            die_sfx.play() 
-        if dieCount == 2:
-            screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
-        if dieCount < 2:
-            dieCount += 1
-    elif direction_up:  # If we are facing up
+    if direction_up:  # If we are facing up
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
         walkCount += 1
         last_movement = 1 
@@ -153,20 +158,20 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
         walkCount += 1 
         last_movement = 3
     elif direction_left: # If we are facing left
-        screen.blit(walk_left[walkCount], (image_cords['x'],image_cords['y']))
-        walkCount += 1 
-        last_movement = 4
+            screen.blit(walk_left[walkCount], (image_cords['x'],image_cords['y']))
+            walkCount += 1 
+            last_movement = 4
     
     else:
-        if attack == False:  # If we are facing static
-            if last_movement == 1:# last direction the character move
-                screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
-            elif last_movement == 2:
-                screen.blit(walk_static[1], (image_cords['x'],image_cords['y']))
-            elif last_movement == 3:
-                screen.blit(walk_static[2], (image_cords['x'],image_cords['y'])) 
-            elif last_movement == 4:
-                screen.blit(walk_static[3], (image_cords['x'],image_cords['y']))
+        if attack == False and life_state > 0:  # If we are facing static
+                if last_movement == 1:# last direction the character move
+                    screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
+                elif last_movement == 2:
+                    screen.blit(walk_static[1], (image_cords['x'],image_cords['y']))
+                elif last_movement == 3:
+                    screen.blit(walk_static[2], (image_cords['x'],image_cords['y'])) 
+                elif last_movement == 4:
+                    screen.blit(walk_static[3], (image_cords['x'],image_cords['y']))
 # redimenssionner les images
 for i in images:
     images[i] = pygame.transform.scale(images[i], (10 * zoom, 10 * zoom))
@@ -176,7 +181,7 @@ class Camera():
     def __init__(self, player):
         self.player = player
     # fonction de rafraichissement
-    def refresh(self, direction_up,direction_down,direction_left,direction_right, attack, position = False):
+    def refresh(self, direction_up,direction_down,direction_left,direction_right, attack, life_state, position = False):
         # la position de la caméra est la même que le joueur si elle n'est pas précisée
         if not position:
             position = self.player.position
@@ -200,7 +205,7 @@ class Camera():
             except:
                 pass
             index += 1
-        redrawGameWindow(direction_up,direction_down,direction_left,direction_right, attack)
+        redrawGameWindow(direction_up,direction_down,direction_left,direction_right, attack, life_state)
         pygame.display.flip()
 
 print(" fait")
