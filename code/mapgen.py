@@ -1,3 +1,4 @@
+
 # constants
 nbBlocksX = 9
 nbBlocksY = 9
@@ -6,11 +7,16 @@ nbChunkY = 8
 map = []
 nbMapPoints = 6
 mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
+startPoint = []
+endPoint = []
+mapSize =[nbBlocksX * nbChunkX, nbBlocksY * nbChunkY]
 
 # modules
 import copy
 import random
 from nodes import *
+
+print("génération de la map ...", end = '')
 
 # define chunks
 class Chunk:
@@ -21,6 +27,7 @@ class Chunk:
 
 # fonction de génération de la map
 def GenMap():
+    global startPoint, endPoint, map
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
@@ -36,7 +43,11 @@ def GenMap():
     # créer les points de connection des chemins
     for point in range(nbMapPoints):
         pointMap.append([random.randint(0, nbChunkY - 1), random.randint(0, nbChunkX - 1)])
+    # debug
+    pointMap[3] = [0, 0]
     
+    startPoint = pointMap[0]
+    endPoint = pointMap[-1]
     # relier les points entre eux
     for point in range(nbMapPoints - 1):
         # x et y
@@ -72,21 +83,6 @@ def GenMap():
         if noiseChunk[XorY] + moreOrLess > 0 and noiseChunk[XorY] < [nbChunkX, nbChunkY][XorY]:
             noiseChunk[XorY] = noiseChunk[XorY] + moreOrLess
             wayMap.append(noiseChunk)
-    
-    # débugage d'affichage de la map
-    for x in range(nbChunkX):
-        textX = ""
-        for y in range(nbChunkY):
-            if [x, y] in wayMap:
-                if [x, y] == pointMap[-1]:
-                    textX += '\x1b[6;30;42m' + '[E]' + '\x1b[0m'
-                elif [x, y] == pointMap[0]:
-                    textX += '\x1b[6;30;42m' + '[S]' + '\x1b[0m'
-                else:
-                    textX += '\x1b[6;30;44m' + '[ ]' + '\x1b[0m'
-            else:
-                textX += '\x1b[6;30;43m' + '[#]' + '\x1b[0m'
-        print(textX)
 
     # définir les types de chunks
     for x in range(nbChunkX):
@@ -139,19 +135,21 @@ def GenMap():
                         chunkContent = grind(i[0], map[x][y].chunkType, chunkContent)
             map[x][y].chunkContent = chunkContent
     
-    #sdgmsd fgksdkjasdjkfhakjsdnf---------------------
-    for y1 in range(nbChunkY):
-        for y2 in range(nbBlocksY):
-            text=""
-            for x1 in range(nbChunkX):
-                for x2 in range(nbBlocksX):
-                    if isinstance(map[x1][y1].chunkContent[x2][y2], BrickFloor):
-                        text += '\x1b[6;30;42m' + '[F]' + '\x1b[0m'
-                    elif isinstance(map[x1][y1].chunkContent[x2][y2], BrickWall):
-                        text += '\x1b[6;30;44m' + '[W]' + '\x1b[0m'
-                    else:
-                        text += '\x1b[6;30;42m' + '[ ]' + '\x1b[0m'
-            print(text)
+    # changer le format de la map
+    mapTmp = copy.copy(map)
+    map = []
+    for ychunk in range(nbChunkY):
+        for yBlock in range(nbBlocksY):
+            map.append([])
+            for xchunk in range(nbChunkX):
+                for xBlock in range(nbBlocksX):
+                    map[-1].append(mapTmp[xchunk][ychunk].chunkContent[xBlock][yBlock])
+    
+    print(" fait", end = '\n')
+    
+
+
+
 
             
 GenMap()

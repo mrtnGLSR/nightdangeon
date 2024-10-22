@@ -1,7 +1,7 @@
 # api for the game
 
 # modules
-from mapgen import map
+from camera import *
 from nodes import Solide
 from copy import copy
 
@@ -14,142 +14,75 @@ nbBlocksY = 9
 # définitions des entités (objets mobiles)
 class Entity(Solide):
     def __init__(self, draw, position, walkable, texture, health):
-        Solide.__init__(self, draw, position, walkable, texture)
+        Solide.__init__(self, draw, position, walkable, texture, [100])
         self.health = health
+        self.camera = Camera(self)
+
+    # fonction  de rafraichissement
+    def refresh(self):
+        self.camera.refresh(self.position)
+
+
     # fonction de mouvement
     def move(self, xMove, yMove):
-        # détection des collisions
-        def defineBlockList(self, direction):
-            blocklist=[]
 
-            # vérification Est 
-            if direction == "E":
-                # vérification de la position dans l'espace pour ne pas sortir de la map
-                nbChunkChecked = 2
-                if self.position[2] == nbChunkX:
-                    nbChunkChecked = 1
-                # boucle par chunk traité
-                for chunkCheckNumber in range(nbChunkChecked):
-                    # définir une position virtuelle comme point de départ en terme de traitment des chunks
-                    positionInChunk = copy(self.position)
-                    # changer la position si le chunk à traiter change
-                    if chunkCheckNumber == 1:
-                        positionInChunk[0] = 0
-                        positionInChunk[2] += 1
-                    # traiter le chunk block par block
-                    for i in range(nbBlocksX):
-                        # terminer le traitement du chunk si l'index arrive à la fin
-                        if i + positionInChunk[0] == nbBlocksX:
-                            break
-                        # ajouter le block à la liste de blocks en fonction des objets sur la map
-                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] + chunkCheckNumber].chunkContent[int(positionInChunk[1])][i + int(positionInChunk[0])])
-            
-            # vérification Ouest
-            if direction == "O":
-                nbChunkChecked = 2
-                if self.position[2] == 0:
-                    nbChunkChecked = 1
-                for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
-                    if chunkCheckNumber == 1:
-                        positionInChunk[0] = nbBlocksX -1
-                        positionInChunk[2] -= 1
-                    for i in range(nbBlocksX):
-                        if positionInChunk[0] - i <= 0:
-                            break
-                        print(chunkCheckNumber)
-                        blocklist.append(map[positionInChunk[3]][positionInChunk[2] - chunkCheckNumber].chunkContent[int(positionInChunk[1])][int(positionInChunk[0]) - i])
-
-            # vérification Sude
-            if direction == "S":
-                nbChunkChecked = 2
-                if self.position[1] == nbChunkY:
-                    nbChunkChecked = 1
-                for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
-                    if chunkCheckNumber == 1:
-                        positionInChunk[1] = 0
-                        positionInChunk[3] += 1
-                    for i in range(nbBlocksY):
-                        if i + positionInChunk[1] == nbBlocksY:
-                            break
-                        blocklist.append(map[positionInChunk[3] + chunkCheckNumber ][positionInChunk[2]].chunkContent[i + int(positionInChunk[1])][int(positionInChunk[0])])
-
-            # vérification Nord
-            if direction == "N":
-                nbChunkChecked = 2
-                if self.position[1] == 0:
-                    nbChunkChecked = 1
-                for chunkCheckNumber in range(nbChunkChecked):
-                    positionInChunk = copy(self.position)
-                    if chunkCheckNumber == 1:
-                        positionInChunk[1] = nbBlocksY -1
-                        positionInChunk[3] -= 1
-                    for i in range(nbBlocksY):
-                        if positionInChunk[1] - i <= 0:
-                            break
-                        blocklist.append(map[positionInChunk[3] - chunkCheckNumber][positionInChunk[2]].chunkContent[int(positionInChunk[1]) - i][int(positionInChunk[0])])
-            return(blocklist)
+        # vérifier que le mouvement ne se fasse pas dans le vide
+        if xMove == 0 and yMove == 0:
+            return
         
-        # fonction de calcule de la distance
-        def checkCloserobject(self, blocksList, direction):
-            distance = 0.0
-            # ajouter un bloque à chaque case ou le joueur pourait marcher
-            for i in blocksList:
-                if i.walkable:
-                    distance += 1
-                else:
-                    break # si le joueur n'a pas la posibilité de marcher sur la case analysée, le compteur s'arrête
-            
-            # réduire la distance en fonction de la position du joueur sur le bloque
-            distance -= (self.position[{"N":1, "S":1, "E":0, "O":0}[direction]]) % 1
-
-            # réduire la distance en fonction de la forme du joueur
-            distance -= (((self.draw[{"N":1, "S":3, "E":0, "O":2}[direction]]) **2) **0.5 + 0.5)
-            return(round(distance, 1))
+        # définition de la distance 
+        wayDistance = 0
+        if xMove:
+            wayDistance = xMove ** 2 // xMove
+        else:
+            wayDistance = yMove ** 2 // yMove
         
-        # identifier le sens de mouvement
-        sens = 0
+        # définition de la direction
         if xMove > 0:
-            sens = "E"
+            direction = "E"
         elif xMove < 0:
-            sens = "O"
-        if yMove > 0:
-            sens = "N"
-        elif yMove < 0:
-            sens = "S"
+            direction = "O"
+        elif yMove > 0:
+            direction = "S"
+        else:
+            direction = "N"
         
-        # définir l'objet le plus proche en fonction du sens
-        closerBlock = checkCloserobject(self, defineBlockList(self, sens), sens)
+        print(direction)
 
-        # identifier si la distance est plus grande que le mouvement
-        if sens in ["E", "O"]:
-            if closerBlock <= (xMove ** 2) ** 0.5:
-                xMove = closerBlock * {"E":1, "O":-1}[sens]
-        if sens in ["N", "S"]:
-            if closerBlock <= (yMove ** 2) ** 0.5:
-                yMove = closerBlock * {"N":1, "S":-1}[sens]
+        # définition de la distance que le joueur peut parcourir
+        distances=[0, 0, 0, 0]
+        index = 0
+        # pour chaque point du joueur
+        for i in self.draw:
+            # pour la l'entier de la distance à parcourir
+            #                   vvvvvvvvvvv---convertion en float pour ne pas avoir de nombes complex
+            for j in range(int((float(float(xMove + yMove) ** 2) ** 0.5) // 1 + 2)):
+                # définir le bloque à analyser
+                block = [int(self.position[0] + i[0]) // 1 + j * {"E":1, "O":-1, "N":0, "S":0}[direction], int(self.position[1] + i[1]) // 1 + j * {"E":0, "O":0, "N":-1, "S":1}[direction]]
+                # vérifier que le bloque est dans la map et si il est est emprintable
+                if 0 < block[0] < mapSize[0] -1 and 0 < block[1] < mapSize[1] - 1:
+                    if map[block[0]][block[1]].walkable:
+                        print("skibidi")
+                        distances[index] += 1
+                    else:
+                        break
+            # ajouter la forme du joueur
+            distances[index] += {"N":self.draw[1][1], "S":-self.draw[3][1], "E":-self.draw[2][0], "O":self.draw[0][0]}[direction] + round(self.position[{"N":1, "S":1, "E":0, "O":0}[direction]] * {"N":1, "S":-1, "E":-1, "O":1}[direction] % 1, 1)
+            index += 1
+        # redéfinition de la distance à parcourir en fonction des obstacles
+        if min(distances) < wayDistance:
+            if direction in ["N", "S"]:
+                yMove = min(distances) * {"N":-1, "S":1}[direction]
+            else:
+                xMove = min(distances) * {"E":1, "O":-1}[direction]
+        if min(distances) <= 0:
+            xMove = yMove = 0
 
-        # détection des changementes de chunks
-        #   position x
-        if self.position[0] + xMove >= nbBlocksX:
-            self.position[2] += int((self.position[0] + xMove) // nbBlocksX)
-        if self.position[0] + xMove < nbBlocksX:
-            self.position[2] -= int((self.position[0] + xMove) // nbBlocksX)
-        #   position y
-        if self.position[1] + yMove >= nbBlocksY:
-            self.position[3] += int((self.position[1] + yMove) // nbBlocksY)
-        if self.position[1] + yMove < nbBlocksY:
-            self.position[3] -= int((self.position[1] + yMove) // nbBlocksY)
-        # changement de position
-        self.position[0] += (xMove % (nbBlocksX))
-        self.position[1] += (yMove % (nbBlocksY))
+        print("ymove : " + str(yMove))
 
-        # arrondire les nombres
-        for i in range(2):
-            self.position[i] = (round(self.position[i], 1))
+        self.position = [round(self.position[0] + xMove, 1), round(self.position[1] + yMove, 1)]
 
 # définition du joueur
 class Player(Entity):
     def __init__(self, position):
-        Entity.__init__(self, [-0.4, 0.4, 0.4, -0.4], position, False, False, 100)
+        Entity.__init__(self, [[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position, False, False, 100)
