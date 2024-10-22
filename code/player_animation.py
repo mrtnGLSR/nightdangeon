@@ -22,11 +22,6 @@ attackCount = 0 # walkcount is the number of the frame during the animations for
 
 dieCount = 0
 lifeState = 3
-
-
-lifeState = 3
-
-
 # 1=up, 2=down, 3=right, 4=left
 last_movement = 2 # set default orientation
 # Dictionary
@@ -34,9 +29,6 @@ image_cords = {
     'y' : ((screen.get_height()) / 2) - 82.5,# position of the player in height ([window height] / 2 - [Player image size /2])
     'x' : ((screen.get_width()) / 2) - 55 # position of the player in width ([window width] / 2 - [Player image size /2])
 }
-
-
-# Load sword sfx
 
 
 # Load sfx
@@ -54,10 +46,6 @@ attack_left = []
 attack_down = []
 attack_up = []
 heath = []
-
-
-
-heath = []
 die = []
 
 # This for load all images needed to make the animations
@@ -71,20 +59,6 @@ class LoadSprites:
             list_add.append(image)
             
 # All class calls
-
-LoadSprites('run', 'up', walk_up, 6)
-LoadSprites('run', 'down', walk_down, 6)
-LoadSprites('run', 'left', walk_left, 6)
-LoadSprites('run', 'right', walk_right, 6)
-LoadSprites('attack', 'right', attack_right, 11)
-LoadSprites('attack', 'left', attack_left, 11)
-LoadSprites('attack', 'down', attack_down, 6)
-LoadSprites('attack', 'up', attack_up, 3)
-LoadSprites('static', 'up', walk_static, 1)
-LoadSprites('static', 'down', walk_static, 1)
-LoadSprites('static', 'right', walk_static, 1)
-LoadSprites('static', 'left', walk_static, 1)
-
 LoadSprites('run', 'up', walk_up, 6, (110, 165))
 LoadSprites('run', 'down', walk_down, 6, (110, 165))
 LoadSprites('run', 'left', walk_left, 6, (110, 165))
@@ -118,7 +92,7 @@ def redrawGameWindow():
 
     screen.fill((255,0,0))  
 
-    screen.fill((0,30,30))  
+
     if lifeState == 1:
         screen.blit(heath[0], (0,0))
         screen.blit(heath[1], (40,0))
