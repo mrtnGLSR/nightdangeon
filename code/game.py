@@ -19,29 +19,27 @@ right = False
 left = False
 attack_state = False
 lifeState = 3
-# importer la camera
-from Engine import *
 
+
+# importer la camera
+
+from Engine import *
 # génération de la map
 GenMap()
 
 # création du joueur
-print("startpoint:")
-print(startPoint)
-player = Player([3.6,4])
-# Chargement de la carte 
-# Taille des tuiles = 80 pixels
 
-# map = Map('./maps/start.map', tile_kinds, 80)
+    
+player = Player([3.6 ,4])
+
 
 # Boucle principale du jeu
 while running:
     startTime = time()
-    print(lifeState)
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #arrêtez le jeu
             running = False  
-    screen.fill(clear_color)  # Efface l'écran en remplissant avec la couleur de fond (noir)
+    screen.fill(clear_color)# Clear the screen 
     
     # map.draw(screen)  # Dessine la carte (tuiles de sol, murs) sur l'écran
     
@@ -94,6 +92,8 @@ while running:
             attack_state = True
 
     player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
+    print(f'Player:{player.position}')
+    
     # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à 0.1s
@@ -107,5 +107,4 @@ while running:
         player.move(-0.2, 0)
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         player.move(0.2, 0)
-    print("player-position" + str(player.position))
 pygame.quit()

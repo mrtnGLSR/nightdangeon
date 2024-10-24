@@ -47,7 +47,7 @@ class Entity(Solide):
         else:
             direction = "N"
         
-        print(direction)
+
 
         # définition de la distance que le joueur peut parcourir
         distances=[0, 0, 0, 0]
@@ -62,7 +62,6 @@ class Entity(Solide):
                 # vérifier que le bloque est dans la map et si il est est emprintable
                 if 0 < block[0] < mapSize[0] -1 and 0 < block[1] < mapSize[1] - 1:
                     if map[block[0]][block[1]].walkable:
-                        print("skibidi")
                         distances[index] += 1
                     else:
                         break
@@ -78,7 +77,6 @@ class Entity(Solide):
         if min(distances) <= 0:
             xMove = yMove = 0
 
-        print("ymove : " + str(yMove))
 
         self.position = [round(self.position[0] + xMove, 1), round(self.position[1] + yMove, 1)]
 
