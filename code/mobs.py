@@ -29,7 +29,6 @@ class Mobs(Solide):
         
         distances = [0, 0, 0, 0]  # Liste pour stocker les distances
         index = 0
-        
         # Vérifie les blocs sur le chemin du mouvement
         for i in self.draw:
             for j in range(int((xMove**2 + yMove**2) ** 0.5) + 2):
@@ -69,6 +68,7 @@ class Mob(Mobs):
     def __init__(self, position, speed):
         # Initialise la classe parent Mobs
         self.speed = speed
+
         super().__init__(draw=[[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position=position, walkable=False, texture=False, health=100)
 
     def distance_to_player(self, player_position):
@@ -99,7 +99,8 @@ class Mob(Mobs):
             self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
 
 # Création d'une instance de Mob à la position (2, 2)
-mob_instance = Mob(position=(2, 2), speed=0.2)
+mob_instance = Mob(position=(random.randint(2, 78), random.randint(2, 78)), speed=0.2)
 while True:  # Boucle infinie pour le mouvement # Pause de 0.5 secondes entre les mouvements
+    time.sleep(0.5)
     mob_instance.move_randomly(player_position)  # Déplace le mob selon la logique définie
     print(mob_instance.position)  # Affiche la position actuelle du mob
