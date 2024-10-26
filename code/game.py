@@ -49,30 +49,56 @@ while running:
     #     s.draw(screen)  # Dessine chaque sprite sur l'écran
     # add keys event
     keys = pygame.key.get_pressed()
-    if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]):
+    if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]) and keys[pygame.K_d] == False and keys[pygame.K_RIGHT] == False and keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False :
         # Static if up and down is pressed in the same time
         up = down = right = left = False
         walkCount = 0
         
-    elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and (keys[pygame.K_a] or keys[pygame.K_LEFT]):
+    elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and (keys[pygame.K_a] or keys[pygame.K_LEFT]) and keys[pygame.K_w] == False and keys[pygame.K_UP] == False and keys[pygame.K_s] == False and keys[pygame.K_DOWN] == False:
         # Static if right and left is pressed in the same time
         up = down = right = left = False
         walkCount = 0
         
     else:
-        if keys[pygame.K_w] or keys[pygame.K_UP]:# if the keys to go up are pressed
-            if keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False: 
+        if keys[pygame.K_w] or keys[pygame.K_UP] :# if the keys to go up are pressed 
+            if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False :
+                up = False
+                right = True
+                down = False
+                left = False
+                attack_state = False
+            elif (keys[pygame.K_a] or keys[pygame.K_LEFT]) and  keys[pygame.K_d] == False and keys[pygame.K_RIGHT] == False:
+                up = False
+                right = False
+                down = False
+                left = True
+                attack_state = False
+            else:
                 up = True
                 right = False
                 down = False
                 left = False
                 attack_state = False
+            
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:  # if the keys to go down are pressed
-            up = False
-            right = False
-            down = True
-            left = False
-            attack_state = False
+            if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False:
+                up = False
+                right = True
+                down = False
+                left = False
+                attack_state = False
+            elif (keys[pygame.K_a] or keys[pygame.K_LEFT]) and  keys[pygame.K_d] == False and keys[pygame.K_RIGHT] == False:
+                up = False
+                right = False
+                down = False
+                left = True
+                attack_state = False
+            else:
+                up = False
+                right = False
+                down = True
+                left = False
+                attack_state = False
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]: # if the keys to go right are pressed
             up = False
             right = True
@@ -85,8 +111,7 @@ while running:
             down = False
             left = True
             attack_state = False
-        elif keys[pygame.K_o]:
-            lifeState = 0
+
         else:
             up = right = down = left= attack_state = False # if no keys is pressed he was static
             walkCount = 0

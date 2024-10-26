@@ -113,6 +113,9 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
     # if the frame is over 7 the variable is reset
     if walkCount + 1 >= 7:
         walkCount = 0
+    
+    
+    
     # if the frame is over 11 the variable is reset
     if attackCount + 1 >= 11:
         attackCount = 0
@@ -133,36 +136,36 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
                 sword_sfx.play()
             screen.blit(attack_down[attackCount], (image_cords['x'],image_cords['y'])) # Draw the animations
             attackCount += 1
-       
         if last_movement == 3:# if the last movement is right
             if attackCount == 6:# if the animation is in the middle 
                 sword_sfx.play()
             screen.blit(attack_right[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
             attackCount += 1
-       
         if last_movement == 4:# if the last movement is left
             if attackCount == 6:# if the animation is in the middle
                 sword_sfx.play()
             screen.blit(attack_left[attackCount], (image_cords['x'],image_cords['y']))# Draw the animations
             attackCount += 1
+
+
+
     if direction_up:  # If we are facing up
         screen.blit(walk_up[walkCount], (image_cords['x'],image_cords['y'])) 
         walkCount += 1
         last_movement = 1 
-    elif direction_down: # If we are facing down
+    if direction_down: # If we are facing down
         screen.blit(walk_down[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 2
-    elif direction_right: # If we are facing right
+    if direction_right: # If we are facing right
         screen.blit(walk_right[walkCount], (image_cords['x'],image_cords['y']))
         walkCount += 1 
         last_movement = 3
-    elif direction_left: # If we are facing left
+    if direction_left: # If we are facing left
             screen.blit(walk_left[walkCount], (image_cords['x'],image_cords['y']))
             walkCount += 1 
             last_movement = 4
-    
-    else:
+    if direction_up == False and direction_down == False and direction_left == False and direction_right == False:
         if attack == False and life_state > 0:  # If we are facing static
                 if last_movement == 1:# last direction the character move
                     screen.blit(walk_static[0], (image_cords['x'],image_cords['y']))
