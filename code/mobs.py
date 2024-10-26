@@ -8,7 +8,7 @@ mapSize = (8 * 9, 8 * 9)  # 8 chunks x 9 blocks, par exemple
 map = [[Solide([], (i, j), True, False, [100]) for j in range(mapSize[1])] for i in range(mapSize[0])]
 
 # Position initiale du joueur
-player_position = [80, 80]
+player_position = [20, 20]
 
 # Classe représentant les mobs
 class Mobs(Solide):
@@ -66,8 +66,9 @@ class Mobs(Solide):
 
 # Classe représentant un mob spécifique, héritant de Mobs
 class Mob(Mobs):
-    def __init__(self, position,):
+    def __init__(self, position, speed):
         # Initialise la classe parent Mobs
+        self.speed = speed
         super().__init__(draw=[[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position=position, walkable=False, texture=False, health=100)
 
     def distance_to_player(self, player_position):
@@ -83,8 +84,8 @@ class Mob(Mobs):
         distance = (x_diff ** 2 + y_diff ** 2) ** 0.5
         if distance > 0:
             # Déplace le mob vers le joueur d'une distance fixe
-            xMove = (x_diff / distance) * 0.2
-            yMove = (y_diff / distance) * 0.2
+            xMove = (x_diff / distance) * self.speed
+            yMove = (y_diff / distance) * self.speed
             self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
 
     def move_randomly(self, player_position):
@@ -93,12 +94,12 @@ class Mob(Mobs):
             self.move_towards_player(player_position)  # Avance vers le joueur si à portée
         else:
             # Choisit des déplacements aléatoires si le joueur est hors portée
-            xMove = random.choice([-0.2, 0, 0.2])
-            yMove = random.choice([-0.2, 0, 0.2])
+            xMove = random.choice([-self.speed, 0, self.speed])
+            yMove = random.choice([-self.speed, 0, self.speed])
             self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
 
 # Création d'une instance de Mob à la position (2, 2)
-mob_instance = Mob(position=(2, 2))
+mob_instance = Mob(position=(2, 2), speed=0.2)
 while True:  # Boucle infinie pour le mouvement # Pause de 0.5 secondes entre les mouvements
     mob_instance.move_randomly(player_position)  # Déplace le mob selon la logique définie
     print(mob_instance.position)  # Affiche la position actuelle du mob
