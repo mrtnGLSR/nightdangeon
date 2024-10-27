@@ -93,7 +93,6 @@ while running:
             attack_state = True
 
     player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
-    print(player.position)
     for i in entitiesList:
         if float(float(float(i.position[0] - player.position[0]) ** 2 ) ** 0.5) <= 10 and float(float(float(i.position[1] - player.position[1]) ** 2 ) ** 0.5) <= 10:
             i.move_randomly(player.position)
