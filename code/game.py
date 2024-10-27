@@ -19,6 +19,7 @@ right = False
 left = False
 attack_state = False
 lifeState = 3
+victory = False
 
 
 # importer la camera
@@ -30,7 +31,7 @@ GenMap()
 # création du joueur
 
     
-player = Player([3.6 ,4])
+player = Player([startPoint[0] * nbBlocksX + 4, startPoint[1] * nbBlocksY + 4])
 
 
 # Boucle principale du jeu
@@ -92,10 +93,10 @@ while running:
             attack_state = True
 
     player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
+    print(player.position)
     for i in entitiesList:
         if float(float(float(i.position[0] - player.position[0]) ** 2 ) ** 0.5) <= 10 and float(float(float(i.position[1] - player.position[1]) ** 2 ) ** 0.5) <= 10:
             i.move_randomly(player.position)
-            print("true")
     #print(f'Player:{player.position}')
     
     # player.move(0.1, 0)
@@ -111,4 +112,14 @@ while running:
         player.move(-0.2, 0)
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         player.move(0.2, 0)
+
+    if isinstance(map[int(player.position[0] // 1)][int(player.position[1] // 1)], Chest):
+        victory = True
+        running = False
+
+if victory:
+    screen.blit(images["victory"], [screen.get_height() // 2 - 275, screen.get_width() // 2 - 55])
+    pygame.display.flip()
+    pygame.time.wait(3000)
+
 pygame.quit()

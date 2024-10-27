@@ -50,6 +50,7 @@ die = []
 images = {"brickWall":pygame.transform.scale(pygame.image.load('./img/brick-wall.png'),(110, 110)),
           "brickFloor":pygame.transform.scale(pygame.image.load('./img/brick-floor.png'),(110, 110)),
           "test-player":pygame.transform.scale(pygame.image.load('./img/Test-cub.png'),(110, 110)),
+          "chest":pygame.transform.scale(pygame.image.load('./img/chest.png'),(110, 110)),
           
           # guardian
           "guardian-sud-1":pygame.transform.scale(pygame.image.load("./img/guardian-sud-1.png"), (110, 165)),
@@ -67,7 +68,10 @@ images = {"brickWall":pygame.transform.scale(pygame.image.load('./img/brick-wall
           "guardian-death-1":pygame.transform.scale(pygame.image.load("./img/guardian-static-1.png"),(110, 165)),
           "guardian-death-2":pygame.transform.scale(pygame.image.load("./img/guardian-death-2.png"),(110, 165)),
           "guardian-death-3":pygame.transform.scale(pygame.image.load("./img/guardian-death-3.png"),(110, 165)),
-          "guardian-death-4":pygame.transform.scale(pygame.image.load("./img/guardian-death-4.png"), (110, 165))}
+          "guardian-death-4":pygame.transform.scale(pygame.image.load("./img/guardian-death-4.png"), (110, 165)),
+          
+          "victory":pygame.transform.scale(pygame.image.load("./img/victoire.png"), (550, 110)),
+          }
           
 
 # This for load all images needed to make the animations
@@ -125,7 +129,7 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
         if dieCount != 2:
             screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
             death_screen()
-            die_sfx.play() 
+            die_sfx.play()
         if dieCount == 2:
             screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
             death_screen()
@@ -226,14 +230,12 @@ def refresh(self, direction_up,direction_down,direction_left,direction_right, at
         
         # afficher les entités
         for i in entitiesList:
-            print("distance:")
-            print(float(float(float(entitiesList[0].position[1] - position[1]) ** 2 ) ** 0.5))
-            print(float(float(float(entitiesList[0].position[0] - position[0]) ** 2 ) ** 0.5))
             if float(float(float(i.position[0] - position[0]) ** 2 ) ** 0.5) <= viewDistance + 4 and float(float(float(i.position[1] - position[1]) ** 2 ) ** 0.5) <= viewDistance + 4:
-                print(i.texture[i.textureState[0]][i.textureState[1]])
                 screen.blit(images[i.texture[i.textureState[0]][i.textureState[1]]], [(i.position[0] - position[0] + viewDistance) * zoom * 10, (i.position[1] - position[1] + viewDistance - 0.5) * zoom * 10])
+                i.updateIMG()
 
         redrawGameWindow(direction_up,direction_down,direction_left,direction_right, attack, life_state)
+
         pygame.display.flip()
 
 # ajouter la fonction à la Camera

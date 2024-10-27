@@ -33,7 +33,7 @@ class Entity(Solide):
 
         # vérifier que le mouvement ne se fasse pas dans le vide
         if xMove == 0 and yMove == 0:
-            return
+            return "S"
         
         # définition de la distance 
         wayDistance = 0
@@ -82,8 +82,9 @@ class Entity(Solide):
         if min(distances) <= 0:
             xMove = yMove = 0
 
-
         self.position = [round(self.position[0] + xMove, 1), round(self.position[1] + yMove, 1)]
+        print(f"la direction est : {direction}")
+        return direction
 
 # définition du joueur
 class Player(Entity):

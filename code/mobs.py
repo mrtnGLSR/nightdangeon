@@ -37,7 +37,6 @@ class Mobs(Entity):
         
         # Normaliser le déplacement
         distance = (x_diff ** 2 + y_diff ** 2) ** 0.5
-        print(f"distance monstre - joueur : {distance}")
         if distance != 0:
             # Déplace le mob vers le joueur d'une distance fixe
             if x_diff != 0:
@@ -48,20 +47,32 @@ class Mobs(Entity):
                 yMove = (y_diff / abs(y_diff)) * self.speed
             else:
                 yMove = 0
-            self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
+            if xMove == 0 and yMove == 0:
+                self.mobile = False
+            else:
+                self.mobile = True
+
+            self.textureState[0] = self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
     
     # bouger de manière aléatoire en fonction de la distance du joueur
     def move_randomly(self, player_position):
-        print("mouvement controllé")
         # Vérifie la distance au joueur pour décider du mouvement
         if self.distance_to_player(player_position) <= self.viewDistance:
             self.move_towards_player(player_position)  # Avance vers le joueur si à portée
         else:
-            print("mouvement aléatoir")
             # Choisit des déplacements aléatoires si le joueur est hors portée
             xMove = random.choice([-self.speed, 0, self.speed])
             yMove = random.choice([-self.speed, 0, self.speed])
-            self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
+            self.textureState[0] = self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
+    
+    # mettre à jour l'image
+    def updateIMG(self):
+        if self.mobile:
+            # passer à l'animation suivante
+            self.textureState[1] = (self.textureState[1] + 1) % len(self.texture[self.textureState[0]])
+        else:
+            # passer ou rester à la première annimation
+            self.textureState[1] = 0
 
 
 # monstre gardian
@@ -84,18 +95,16 @@ class Guardian(Mobs):
                           False) # mobile
 
 # placer les créatures
-Y = 0
-print(chunkMap)
+X = 0
 for chunkLine in chunkMap:
-    X = 0
+    Y = 0
     for chunk in chunkLine:
         if chunk.chunkType != "Full":
             if random.randint(0, 100) <= 30 :
                 entitiesList.append(Guardian([X * nbBlocksX + nbBlocksX / 2, Y * nbBlocksY + nbBlocksY / 2]))
             pass
-        X += 1
-    Y += 1
-print(f"créatures : {entitiesList}")
+        Y += 1
+    X += 1
 
 
     

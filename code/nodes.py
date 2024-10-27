@@ -36,4 +36,9 @@ class BrickFloor(Floor):
     def __init__(self):
         Floor.__init__(self, "brickFloor", 0)
 
+# coffre de fin
+class Chest(Floor):
+    def __init__(self):
+        Floor.__init__(self, "chest", 0)
+
 print(" fait", end = '\n')

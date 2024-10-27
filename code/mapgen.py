@@ -5,8 +5,8 @@ nbBlocksY = 9
 nbChunkX = 8
 nbChunkY = 8
 map = []
-nbMapPoints = 6
-mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
+nbMapPoints = 3
+mapNoise = 5 # définit la quantité de chemins aléatoires. Plus le nombre est petit, plus le chemin est directe et plus le nombre est grand plus le chemin est chaotique
 startPoint = []
 endPoint = []
 mapSize =[nbBlocksX * nbChunkX, nbBlocksY * nbChunkY]
@@ -45,8 +45,6 @@ def GenMap():
     # créer les points de connection des chemins
     for point in range(nbMapPoints):
         pointMap.append([random.randint(0, nbChunkY - 1), random.randint(0, nbChunkX - 1)])
-    # debug
-    pointMap[3] = [0, 0]
     
     startPoint = pointMap[0]
     endPoint = pointMap[-1]
@@ -85,7 +83,10 @@ def GenMap():
         if noiseChunk[XorY] + moreOrLess > 0 and noiseChunk[XorY] < [nbChunkX, nbChunkY][XorY]:
             noiseChunk[XorY] = noiseChunk[XorY] + moreOrLess
             wayMap.append(noiseChunk)
-
+    print("debug sa mère:")
+    print(pointMap)
+    print(wayMap)
+    print(endPoint)
     # définir les types de chunks
     for x in range(nbChunkX):
         for y in range(nbChunkY):
@@ -140,15 +141,19 @@ def GenMap():
     # changer le format de la map
     mapTmp = copy.copy(map)
     map = []
-    for ychunk in range(nbChunkY):
-        for yBlock in range(nbBlocksY):
+    for xchunk in range(nbChunkX):
+        for xBlock in range(nbBlocksX):
             map.append([])
-            for xchunk in range(nbChunkX):
-                for xBlock in range(nbBlocksX):
+            for ychunk in range(nbChunkY):
+                for yBlock in range(nbBlocksY):
                     map[-1].append(mapTmp[xchunk][ychunk].chunkContent[xBlock][yBlock])
     chunkMap = copy.copy(mapTmp)
-    
+
+    # ajouter le coffre à la fin
+    map[endPoint[0] * nbBlocksX + 4][endPoint[1] * nbBlocksY + 4] = Chest()
+    print([endPoint[0] * nbBlocksX + 4,endPoint[1] * nbBlocksY + 4])
     print(" fait", end = '\n')
+    print(endPoint)
     
 
 
