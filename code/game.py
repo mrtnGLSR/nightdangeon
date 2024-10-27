@@ -3,7 +3,7 @@ from time import time
 
 # from sprite import sprites   # Liste ou collection des sprites (objets visuels animés ou statiques)
 # from map import TileKind, Map # TileKind : Définit les types de tuiles (sol, mur, etc.)
-                             # Map : Définit la carte ou niveau de jeu
+# Map : Définit la carte ou niveau de jeu
 # charger le menu principal
 # from Main_menu import *
 
@@ -30,7 +30,7 @@ GenMap()
 # création du joueur
 
     
-player = Player([3.6 ,4])
+player = Player([3.6 ,4], attack_power=1, attack_range=2, attack_cooldown=1)
 
 
 # Boucle principale du jeu
@@ -41,10 +41,6 @@ while running:
             running = False  
     screen.fill(clear_color)# Clear the screen 
     
-    # map.draw(screen)  # Dessine la carte (tuiles de sol, murs) sur l'écran
-    
-    # for s in sprites:  # Parcourt tous les sprites du jeu
-    #     s.draw(screen)  # Dessine chaque sprite sur l'écran
     # add keys event
     keys = pygame.key.get_pressed()
     if (keys[pygame.K_w] or keys[pygame.K_UP]) and (keys[pygame.K_s] or keys[pygame.K_DOWN]):
@@ -56,7 +52,6 @@ while running:
         # Static if right and left is pressed in the same time
         up = down = right = left = False
         walkCount = 0
-        
     else:
         if keys[pygame.K_w] or keys[pygame.K_UP]:# if the keys to go up are pressed
             if keys[pygame.K_a] == False and keys[pygame.K_LEFT] == False: 
@@ -89,17 +84,15 @@ while running:
             up = right = down = left= attack_state = False # if no keys is pressed he was static
             walkCount = 0
         if event.type == pygame.MOUSEBUTTONDOWN: # if mouse boutton is pressed
+            for i in entitiesList:
+                player.attack(i)
             attack_state = True
 
-    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
+    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=player.health)
     for i in entitiesList:
         if float(float(float(i.position[0] - player.position[0]) ** 2 ) ** 0.5) <= 10 and float(float(float(i.position[1] - player.position[1]) ** 2 ) ** 0.5) <= 10:
-            i.move_randomly(player.position)
-            print("true")
-    #print(f'Player:{player.position}')
-    
-    # player.move(0.1, 0)
-    #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
+            i.move_randomly(player)
+
     # Pause pour limiter la vitesse d'exécution de la boucle à 0.1s
     while time.time() < startTime + 0.05:
         pass
