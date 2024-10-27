@@ -200,7 +200,6 @@ def options_screen(screen):
         if settings['volume_sfx'] != slider_sfx.getValue() or settings['volume_music'] != slider_music.getValue():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 data = {"volume_music": slider_music.getValue(),"volume_sfx": slider_sfx.getValue()}
-
                 with open(file_path, 'w') as outfile:
                     json.dump(data, outfile, indent=4)
         ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
