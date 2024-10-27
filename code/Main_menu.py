@@ -117,8 +117,9 @@ def scrolling_bg():
 
 
 def title_screen(screen, state_level):
-    
     global running
+    with open("./code/settings.json", "r") as file:
+        data_nb_game = json.load(file)
     btn_start = UIElement(center_position=(520, 420), 
                           font_size=70, bg_rgb=WHITE, 
                           text_rgb=WHITE, text='Start!', 
@@ -135,8 +136,12 @@ def title_screen(screen, state_level):
                       font_size=80, bg_rgb=WHITE,
                       text_rgb=WHITE,
                       text='Night Dungeon')
+    nb_game = UIElement(center_position=(70, 700),
+                      font_size=30, bg_rgb=WHITE,
+                      text_rgb=WHITE,
+                      text=f'Game played:{data_nb_game["game_played"]}')
 
-    entitys = [btn_start, btn_options, btn_quit, Title]
+    entitys = [btn_start, btn_options, btn_quit, Title, nb_game]
 
     while running:
         mouse_up = False
@@ -221,6 +226,21 @@ def loading_screen(screen):
     loading_text = "Loading..."
     completed = 0
 
+
+    # Lire le contenu du fichier JSON
+    with open("./code/settings.json", "r") as file:
+        data = json.load(file)
+
+    # Incrémenter la valeur de "game_played" de 1
+    data["game_played"] += 1
+
+    # Écrire les modifications dans le fichier JSON
+    with open("./code/settings.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+
+
+    
     while completed < 100:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
