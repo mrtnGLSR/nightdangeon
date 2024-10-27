@@ -1,7 +1,7 @@
 # api for the game
 
 # modules
-from camera import *
+from mapgen import *
 from nodes import Solide
 from copy import copy
 
@@ -10,6 +10,11 @@ nbChunkX = 8
 nbChunkY = 8
 nbBlocksX = 9
 nbBlocksY = 9
+
+# déclaration de la camera
+class Camera():
+    def __init__(self, player):
+        self.player = player
 
 # définitions des entités (objets mobiles)
 class Entity(Solide):

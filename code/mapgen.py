@@ -10,10 +10,12 @@ mapNoise = 20 # définit la quantité de chemins aléatoires. Plus le nombre est
 startPoint = []
 endPoint = []
 mapSize =[nbBlocksX * nbChunkX, nbBlocksY * nbChunkY]
+chunkMap = []
 
 # modules
 import copy
 import random
+import math
 from nodes import *
 
 print("génération de la map ...", end = '')
@@ -27,7 +29,7 @@ class Chunk:
 
 # fonction de génération de la map
 def GenMap():
-    global startPoint, endPoint, map
+    global startPoint, endPoint, map, chunkMap
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
@@ -144,6 +146,7 @@ def GenMap():
             for xchunk in range(nbChunkX):
                 for xBlock in range(nbBlocksX):
                     map[-1].append(mapTmp[xchunk][ychunk].chunkContent[xBlock][yBlock])
+    chunkMap = copy.copy(mapTmp)
     
     print(" fait", end = '\n')
     

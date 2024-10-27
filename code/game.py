@@ -23,7 +23,7 @@ lifeState = 3
 
 # importer la camera
 
-from Engine import *
+from camera import *
 # génération de la map
 GenMap()
 
@@ -35,7 +35,7 @@ player = Player([3.6 ,4])
 
 # Boucle principale du jeu
 while running:
-    startTime = time()
+    startTime = time.time()
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #arrêtez le jeu
             running = False  
@@ -92,12 +92,16 @@ while running:
             attack_state = True
 
     player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
-    print(f'Player:{player.position}')
+    for i in entitiesList:
+        if float(float(float(i.position[0] - player.position[0]) ** 2 ) ** 0.5) <= 10 and float(float(float(i.position[1] - player.position[1]) ** 2 ) ** 0.5) <= 10:
+            i.move_randomly(player.position)
+            print("true")
+    #print(f'Player:{player.position}')
     
     # player.move(0.1, 0)
     #pygame.display.flip()  # Rafraîchit l'écran, montre tout ce qui a été dessiné
     # Pause pour limiter la vitesse d'exécution de la boucle à 0.1s
-    while time() < startTime + 0.05:
+    while time.time() < startTime + 0.05:
         pass
     if keys[pygame.K_w] or keys[pygame.K_UP]:
         player.move(0, -0.2)
