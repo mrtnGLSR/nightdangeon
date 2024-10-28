@@ -120,10 +120,10 @@ class Guardian(Mobs):
                           5, # viewdistance
                           1, # dammages
                           0.1, # speed
-                          1, # health
+                          3, # health
                           ["S", 0], #textureState
                           False, # mobile
-                          1, # AttackDamage
+                          2, # AttackDamage
                           1, # AttackRange
                           1.5) # AttackCooldown
         
