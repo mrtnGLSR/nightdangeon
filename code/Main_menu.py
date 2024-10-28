@@ -9,6 +9,7 @@ from pathlib import Path
 from pygame_widgets.button import ButtonArray
 import subprocess
 
+
 # Variables
 running = True
 RED = (178, 34, 34)
@@ -100,6 +101,8 @@ class GameState(Enum):
     OPTIONS = 1
     PREGAME = 2
     LOADING = 3
+    CREATORS = 4
+    
 
     
 
@@ -117,8 +120,9 @@ def scrolling_bg():
 
 
 def title_screen(screen, state_level):
-    
     global running
+    with open("./code/settings.json", "r") as file:
+        data_nb_game = json.load(file)
     btn_start = UIElement(center_position=(520, 420), 
                           font_size=70, bg_rgb=WHITE, 
                           text_rgb=WHITE, text='Start!', 
@@ -135,8 +139,52 @@ def title_screen(screen, state_level):
                       font_size=80, bg_rgb=WHITE,
                       text_rgb=WHITE,
                       text='Night Dungeon')
+    nb_game = UIElement(center_position=(100, 700),
+                      font_size=30, bg_rgb=WHITE,
+                      text_rgb=WHITE,
+                      text=f'Game played:{data_nb_game["game_played"]}')
 
-    entitys = [btn_start, btn_options, btn_quit, Title]
+    
+
+    entitys = [btn_start, btn_options, btn_quit, Title, nb_game]
+
+    while running:
+        mouse_up = False
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                pygame.mixer.Channel(0).play(button_sfx)# Joue le sfx de quannd on appuies sur la souris
+                mouse_up = True
+            keys = pygame.key.get_pressed()
+            # Vérifier si la touche "A" est enfoncée
+            if keys[pygame.K_c]:
+                creators_screen(screen)
+            if event.type == pygame.QUIT:
+                return GameState.QUIT
+
+        scrolling_bg()  # Dessiner l'arrière-plan
+
+        for entity in entitys:
+            ui_action = entity.update(pygame.mouse.get_pos(), mouse_up)
+            entity.draw(screen)
+            if ui_action is not None:
+                return ui_action
+
+        pygame.display.flip()
+
+def creators_screen(screen):
+    global running
+    btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
+    btn_M = UIElement(center_position=(520, 420), 
+                          font_size=35, bg_rgb=WHITE, 
+                          text_rgb=WHITE, text='mrtnGLSR')
+    btn_T = UIElement(center_position=(520, 480),
+                            font_size=35, bg_rgb=WHITE,
+                            text_rgb=WHITE, text='Thibault343')
+    Title = UIElement(center_position=(520, 200),
+                      font_size=80, bg_rgb=WHITE,
+                      text_rgb=WHITE,
+                      text='Creators')
+    entitys = [Title, btn_return, btn_M, btn_T]
 
     while running:
         mouse_up = False
@@ -200,7 +248,6 @@ def options_screen(screen):
         if settings['volume_sfx'] != slider_sfx.getValue() or settings['volume_music'] != slider_music.getValue():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 data = {"volume_music": slider_music.getValue(),"volume_sfx": slider_sfx.getValue()}
-
                 with open(file_path, 'w') as outfile:
                     json.dump(data, outfile, indent=4)
         ui_action = btn_return.update(pygame.mouse.get_pos(), mouse_up)
@@ -222,6 +269,21 @@ def loading_screen(screen):
     loading_text = "Loading..."
     completed = 0
 
+
+    # Lire le contenu du fichier JSON
+    with open("./code/settings.json", "r") as file:
+        data = json.load(file)
+
+    # Incrémenter la valeur de "game_played" de 1
+    data["game_played"] += 1
+
+    # Écrire les modifications dans le fichier JSON
+    with open("./code/settings.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+
+
+    
     while completed < 100:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -318,6 +380,8 @@ def main():
             game_state = pregame_screen(screen)
         elif game_state == GameState.LOADING:
             game_state = loading_screen(screen)  
+        elif game_state == GameState.CREATORS:
+            game_state = creators_screen(screen) 
         elif game_state == GameState.QUIT:
             running = False
 

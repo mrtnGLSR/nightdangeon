@@ -1,7 +1,8 @@
 # import pygame
-from mapgen import *
+from mobs import *
 from screen import *
 import os
+import subprocess
 
 print("chargement de la camera ...", end = '')
 
@@ -45,8 +46,35 @@ attack_up = []
 heath = []
 die = []
 # constants
+
 # charger les images
-images = {"brickWall":pygame.image.load('./img/brick-wall.png'), "brickFloor":pygame.image.load('./img/brick-floor.png', ), "test-player":pygame.image.load('./img/Test-cub.png')}
+images = {"brickWall":pygame.transform.scale(pygame.image.load('./img/brick-wall.png'),(110, 110)),
+          "brickFloor":pygame.transform.scale(pygame.image.load('./img/brick-floor.png'),(110, 110)),
+          "test-player":pygame.transform.scale(pygame.image.load('./img/Test-cub.png'),(110, 110)),
+          "chest":pygame.transform.scale(pygame.image.load('./img/chest.png'),(110, 110)),
+          
+          # guardian
+          "guardian-sud-1":pygame.transform.scale(pygame.image.load("./img/guardian-sud-1.png"), (110, 165)),
+          "guardian-sud-2":pygame.transform.scale(pygame.image.load("./img/guardian-sud-2.png"), (110, 165)),
+          "guardian-sud-3":pygame.transform.scale(pygame.image.load("./img/guardian-sud-3.png"),(110, 165)),
+          "guardian-nord-1":pygame.transform.scale(pygame.image.load("./img/guardian-nord-1.png"), (110, 165)),
+          "guardian-nord-2":pygame.transform.scale(pygame.image.load("./img/guardian-nord-2.png"), (110, 165)),
+          "guardian-nord-3":pygame.transform.scale(pygame.image.load("./img/guardian-nord-3.png"),(110, 165)),
+          "guardian-est-1":pygame.transform.scale(pygame.image.load("./img/guardian-est-1.png"), (110, 165)),
+          "guardian-est-2":pygame.transform.scale(pygame.image.load("./img/guardian-est-2.png"), (110, 165)),
+          "guardian-est-3":pygame.transform.scale(pygame.image.load("./img/guardian-est-3.png"),(110, 165)),
+          "guardian-west-1":pygame.transform.scale(pygame.image.load("./img/guardian-west-1.png"), (110, 165)),
+          "guardian-west-2":pygame.transform.scale(pygame.image.load("./img/guardian-west-2.png"), (110, 165)),
+          "guardian-west-3":pygame.transform.scale(pygame.image.load("./img/guardian-west-3.png"),(110, 165)),
+          "guardian-death-1":pygame.transform.scale(pygame.image.load("./img/guardian-static-1.png"),(110, 165)),
+          "guardian-death-2":pygame.transform.scale(pygame.image.load("./img/guardian-death-2.png"),(110, 165)),
+          "guardian-death-3":pygame.transform.scale(pygame.image.load("./img/guardian-death-3.png"),(110, 165)),
+          "guardian-death-4":pygame.transform.scale(pygame.image.load("./img/guardian-death-4.png"), (110, 165)),
+          
+          "victory":pygame.transform.scale(pygame.image.load("./img/victoire.png"), (550, 110)),
+          }
+          
+
 # This for load all images needed to make the animations
 class LoadSprites:
     def __init__(self, position, orientation, list_add, range_number, size):
@@ -98,16 +126,18 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
         screen.blit(heath[0], (40,0))
         screen.blit(heath[0], (80,0))
     if life_state == 0:
-        pygame.time.delay(500)
-        if dieCount != 2:
+        if dieCount <= 2:
             screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
             death_screen()
-            die_sfx.play() 
+            die_sfx.play()
+            pygame.time.delay(500)
         if dieCount == 2:
             screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
             death_screen()
-            
-        if dieCount < 2:
+            pygame.time.delay(750)
+            pygame.quit()
+            subprocess.run(["python", "./code/Main_menu.py"])
+        if dieCount < 3:
             dieCount += 1
             
     # if the frame is over 7 the variable is reset
@@ -176,15 +206,10 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
                 elif last_movement == 4:
                     screen.blit(walk_static[3], (image_cords['x'],image_cords['y']))
 # redimenssionner les images
-for i in images:
-    images[i] = pygame.transform.scale(images[i], (10 * zoom, 10 * zoom))
 
-# classe définisant la caméra du jeu
-class Camera():
-    def __init__(self, player):
-        self.player = player
+
     # fonction de rafraichissement
-    def refresh(self, direction_up,direction_down,direction_left,direction_right, attack, life_state, position = False):
+def refresh(self, direction_up,direction_down,direction_left,direction_right, attack, life_state, position = False):
         # la position de la caméra est la même que le joueur si elle n'est pas précisée
         if not position:
             position = self.player.position
@@ -208,7 +233,18 @@ class Camera():
             except:
                 pass
             index += 1
+        
+        # afficher les entités
+        for i in entitiesList:
+            if float(float(float(i.position[0] - position[0]) ** 2 ) ** 0.5) <= viewDistance + 4 and float(float(float(i.position[1] - position[1]) ** 2 ) ** 0.5) <= viewDistance + 4:
+                screen.blit(images[i.texture[i.textureState[0]][i.textureState[1]]], [(i.position[0] - position[0] + viewDistance) * zoom * 10, (i.position[1] - position[1] + viewDistance - 0.5) * zoom * 10])
+                i.updateIMG()
+
         redrawGameWindow(direction_up,direction_down,direction_left,direction_right, attack, life_state)
+
         pygame.display.flip()
+
+# ajouter la fonction à la Camera
+setattr(Camera, "refresh", refresh)
 
 print(" fait")

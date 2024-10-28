@@ -1,15 +1,21 @@
 # api for the game
 
 # modules
-from camera import *
+from mapgen import *
 from nodes import Solide
 from copy import copy
+import time
 
 # constants
 nbChunkX = 8
 nbChunkY = 8
 nbBlocksX = 9
 nbBlocksY = 9
+
+# déclaration de la camera
+class Camera():
+    def __init__(self, player):
+        self.player = player
 
 # définitions des entités (objets mobiles)
 class Entity(Solide):
@@ -28,7 +34,7 @@ class Entity(Solide):
 
         # vérifier que le mouvement ne se fasse pas dans le vide
         if xMove == 0 and yMove == 0:
-            return
+            return "S"
         
         # définition de la distance 
         wayDistance = 0
@@ -47,7 +53,7 @@ class Entity(Solide):
         else:
             direction = "N"
         
-        print(direction)
+
 
         # définition de la distance que le joueur peut parcourir
         distances=[0, 0, 0, 0]
@@ -58,14 +64,25 @@ class Entity(Solide):
             #                   vvvvvvvvvvv---convertion en float pour ne pas avoir de nombes complex
             for j in range(int((float(float(xMove + yMove) ** 2) ** 0.5) // 1 + 2)):
                 # définir le bloque à analyser
-                block = [int(self.position[0] + i[0]) // 1 + j * {"E":1, "O":-1, "N":0, "S":0}[direction], int(self.position[1] + i[1]) // 1 + j * {"E":0, "O":0, "N":-1, "S":1}[direction]]
+                block = [int({"N":self.position[0],
+                              "S":self.position[0],
+                              "E":self.position[0] + i[0], 
+                              "O":self.position[0] + i[0]}[direction]) // 1 + j * {"E":1, "O":-1, "N":0, "S":0}[direction], int({"N":self.position[1] + i[1],
+                                                                                                                                 "S":self.position[1] + i[1],
+                                                                                                                                 "E":self.position[1],
+                                                                                                                                 "O":self.position[1]}[direction]) // 1 + j * {"E":0, "O":0, "N":-1, "S":1}[direction]]
+                print(block)
+
                 # vérifier que le bloque est dans la map et si il est est emprintable
                 if 0 < block[0] < mapSize[0] -1 and 0 < block[1] < mapSize[1] - 1:
                     if map[block[0]][block[1]].walkable:
-                        print("skibidi")
                         distances[index] += 1
                     else:
-                        break
+                        # permetre de longer les mures
+                        if self.position[{"E":1, "O":1, "N":0, "S":0}[direction]] + i[{"E":1, "O":1, "N":0, "S":0}[direction]] % 1 == 0:
+                            print("bob")
+                            if map[int((block[0] - 0.1 * {"E":0, "O":0, "N":1, "S":1}[direction]) // 1)][int((block[1] - 0.1 * {"E":1, "O":1, "N":0, "S":0}[direction]) // 1)].walkable:
+                                distances[index] += 1
             # ajouter la forme du joueur
             distances[index] += {"N":self.draw[1][1], "S":-self.draw[3][1], "E":-self.draw[2][0], "O":self.draw[0][0]}[direction] + round(self.position[{"N":1, "S":1, "E":0, "O":0}[direction]] * {"N":1, "S":-1, "E":-1, "O":1}[direction] % 1, 1)
             index += 1
@@ -78,11 +95,33 @@ class Entity(Solide):
         if min(distances) <= 0:
             xMove = yMove = 0
 
-        print("ymove : " + str(yMove))
-
         self.position = [round(self.position[0] + xMove, 1), round(self.position[1] + yMove, 1)]
+        return direction
 
 # définition du joueur
 class Player(Entity):
-    def __init__(self, position):
-        Entity.__init__(self, [[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position, False, False, 100)
+    def __init__(self, position, attack_range, attack_power, attack_cooldown, ):
+        super().__init__([[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position, False, False, 100)
+        self.health = 3  # Santé initiale du joueur
+        self.attack_range = attack_range  # Portée d'attaque du joueur
+        self.attack_cooldown = attack_cooldown # cooldown entre chaque attaque
+        self.attack_power = attack_power  # Puissance d'attaque du joueur
+        self.last_attack_time = 0
+    def take_damage(self, damage):
+        self.health -= damage
+
+    def attack(self, mob):
+        # Vérifie si le mob est à portée d'attaque
+        distance_to_mob = ((self.position[0] - mob.position[0]) ** 2 + (self.position[1] - mob.position[1]) ** 2) ** 0.5
+        current_time = time.time()
+
+        if distance_to_mob <= self.attack_range:
+            # Vérifie si le cooldown est respecté
+            if current_time - self.last_attack_time >= self.attack_cooldown:
+                print("Le joueur attaque le mob !")
+                mob.take_damage(self.attack_power)  # Inflige des dégâts au mob
+                self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
+            else:
+                print("Attaque en cooldown, veuillez patienter.")
+
+
