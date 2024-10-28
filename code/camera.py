@@ -2,6 +2,7 @@
 from mobs import *
 from screen import *
 import os
+import subprocess
 
 print("chargement de la camera ...", end = '')
 
@@ -126,15 +127,22 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
         screen.blit(heath[0], (80,0))
     if life_state == 0:
         pygame.time.delay(500)
-        if dieCount != 2:
+        if dieCount <= 2:
             screen.blit(die[dieCount], (image_cords['x'],image_cords['y']))
             death_screen()
             die_sfx.play()
+            pygame.time.delay(500)
         if dieCount == 2:
             screen.blit(die[dieCount], (image_cords['x']-55,image_cords['y']+82.5))
             death_screen()
             
-        if dieCount < 2:
+            pygame.time.delay(750)
+            pygame.quit()
+            subprocess.run(["python", "./code/Main_menu.py"])
+        if dieCount == 3:
+            print('quit')
+        print(dieCount)
+        if dieCount < 3:
             dieCount += 1
             
     # if the frame is over 7 the variable is reset
@@ -160,6 +168,7 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
                 sword_sfx.play()
             screen.blit(attack_down[attackCount], (image_cords['x'],image_cords['y'])) # Draw the animations
             attackCount += 1
+        
        
         if last_movement == 3:# if the last movement is right
             if attackCount == 6:# if the animation is in the middle 

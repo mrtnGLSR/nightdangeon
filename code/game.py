@@ -30,9 +30,8 @@ GenMap()
 
 # création du joueur
 
-    
-player = Player([startPoint[0] * nbBlocksX + 4, startPoint[1] * nbBlocksY + 4])
 
+player = Player([startPoint[0] * nbBlocksX + 4, startPoint[1] * nbBlocksY + 4], attack_power=1, attack_range=2, attack_cooldown=1)
 
 # Boucle principale du jeu
 while running:
@@ -90,12 +89,14 @@ while running:
             up = right = down = left= attack_state = False # if no keys is pressed he was static
             walkCount = 0
         if event.type == pygame.MOUSEBUTTONDOWN: # if mouse boutton is pressed
+            for i in entitiesList:
+                player.attack(i)
             attack_state = True
 
-    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=lifeState)
+    player.refresh(direction_up=up,direction_down=down,direction_left=left,direction_right=right , attack=attack_state,life_state=player.health)
     for i in entitiesList:
         if float(float(float(i.position[0] - player.position[0]) ** 2 ) ** 0.5) <= 10 and float(float(float(i.position[1] - player.position[1]) ** 2 ) ** 0.5) <= 10:
-            i.move_randomly(player.position)
+            i.move_randomly(player)
     #print(f'Player:{player.position}')
     
     # player.move(0.1, 0)

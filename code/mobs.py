@@ -16,7 +16,7 @@ entitiesList = []
 
 # Classe représentant les mobs
 class Mobs(Entity):
-    def __init__(self, draw, position, texture, passif, viewDistance, damages, speed, health, textureState, mobile):
+    def __init__(self, draw, position, texture, passif, viewDistance, damages, speed, health, textureState, mobile,attack_power, attack_range, attack_cooldown):
         # Initialisation de la classe parent Solide
         Entity.__init__(self, draw, position, True, texture, health)
         self.passif = passif # True si passifique, False si dangereux
@@ -25,7 +25,33 @@ class Mobs(Entity):
         self.speed = speed # distance parcourue en un cycle
         self.textureState = textureState # quel limage sera en cours de chargement
         self.mobile = mobile # définir si le joueur est en mouvement pour les positions
+        self.attack_power = attack_power  # Dégâts infligés par attaque
+        self.attack_range = attack_range  # Portée d'attaque
+        self.attack_cooldown = attack_cooldown  # Temps d'attente entre les attaques
+        self.last_attack_time = 0  # Dernière attaque enregistrée
     
+    # perte de vie
+    def take_damage(self, damage):
+        self.health -= damage
+
+        if self.health <= 0:
+            self.die()  # Gérer la mort du mob
+    
+    # mort
+    def die(self):
+        # Actions à effectuer lors de la mort du mob (ex. : disparition, suppression de la liste des mobs)
+        if self in entitiesList:
+            entitiesList.remove(self)
+        # Vous pouvez également ajouter des actions comme supprimer le mob de la liste active
+    
+    #attaque sur le joueur
+    def attack(self, player):
+        # Vérifie si le mob peut attaquer en fonction du temps écoulé
+        current_time = time.time()
+        if current_time - self.last_attack_time >= self.attack_cooldown:
+            player.take_damage(self.attack_power)  # Réduit la santé du joueur
+            self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
+
     # Calcule la distance entre le mob et le joueur
     def distance_to_player(self, player_position):
         return ((self.position[0] - player_position[0]) ** 2 + (self.position[1] - player_position[1]) ** 2) ** 0.5
@@ -55,10 +81,14 @@ class Mobs(Entity):
             self.textureState[0] = self.move(xMove, yMove)  # Appelle la méthode move pour actualiser la position
     
     # bouger de manière aléatoire en fonction de la distance du joueur
-    def move_randomly(self, player_position):
-        # Vérifie la distance au joueur pour décider du mouvement
-        if self.distance_to_player(player_position) <= self.viewDistance:
-            self.move_towards_player(player_position)  # Avance vers le joueur si à portée
+    def move_randomly(self, player):
+        player_position = player.position
+        # Si le joueur est à portée d'attaque, le mob attaque au lieu de bouger
+        if self.distance_to_player(player_position) <= self.attack_range:
+            self.attack(player)
+        elif self.distance_to_player(player_position) <= 10:
+            # Avance vers le joueur si à portée de mouvement
+            self.move_towards_player(player_position)
         else:
             # Choisit des déplacements aléatoires si le joueur est hors portée
             xMove = random.choice([-self.speed, 0, self.speed])
@@ -90,9 +120,13 @@ class Guardian(Mobs):
                           5, # viewdistance
                           1, # dammages
                           0.1, # speed
-                          10, # health
+                          1, # health
                           ["S", 0], #textureState
-                          False) # mobile
+                          False, # mobile
+                          1, # AttackDamage
+                          1, # AttackRange
+                          1.5) # AttackCooldown
+        
 
 # placer les créatures
 X = 0

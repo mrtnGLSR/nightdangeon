@@ -4,6 +4,7 @@
 from mapgen import *
 from nodes import Solide
 from copy import copy
+import time
 
 # constants
 nbChunkX = 8
@@ -99,5 +100,26 @@ class Entity(Solide):
 
 # définition du joueur
 class Player(Entity):
-    def __init__(self, position):
-        Entity.__init__(self, [[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position, False, False, 100)
+    def __init__(self, position, attack_range, attack_power, attack_cooldown, ):
+        super().__init__([[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4], [-0.4, 0.4]], position, False, False, 100)
+        self.health = 3  # Santé initiale du joueur
+        self.attack_range = attack_range  # Portée d'attaque du joueur
+        self.attack_cooldown = attack_cooldown # cooldown entre chaque attaque
+        self.attack_power = attack_power  # Puissance d'attaque du joueur
+        self.last_attack_time = 0
+    def take_damage(self, damage):
+        self.health -= damage
+
+    def attack(self, mob):
+        # Vérifie si le mob est à portée d'attaque
+        distance_to_mob = ((self.position[0] - mob.position[0]) ** 2 + (self.position[1] - mob.position[1]) ** 2) ** 0.5
+        current_time = time.time()
+
+        if distance_to_mob <= self.attack_range:
+            # Vérifie si le cooldown est respecté
+            if current_time - self.last_attack_time >= self.attack_cooldown:
+                print("Le joueur attaque le mob !")
+                mob.take_damage(self.attack_power)  # Inflige des dégâts au mob
+                self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
+            else:
+                print("Attaque en cooldown, veuillez patienter.")
