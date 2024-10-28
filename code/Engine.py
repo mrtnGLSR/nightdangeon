@@ -1,6 +1,7 @@
 # api for the game
 
 # modules
+import mapgen
 from mapgen import *
 from nodes import Solide
 from copy import copy
@@ -31,7 +32,7 @@ class Entity(Solide):
 
     # fonction de mouvement
     def move(self, xMove, yMove):
-
+        map = mapgen.map
         # vérifier que le mouvement ne se fasse pas dans le vide
         if xMove == 0 and yMove == 0:
             return "S"

@@ -1,4 +1,5 @@
 # import pygame
+import mobs
 from mobs import *
 from screen import *
 import os
@@ -112,6 +113,7 @@ LifeSprite('death_hearth')
 
 def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,attack, life_state):
     global walkCount, last_movement, attackCount, dieCount
+
     # Apply a background color
     if life_state == 1:
         screen.blit(heath[0], (0,0))
@@ -136,7 +138,7 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
             death_screen()
             pygame.time.delay(750)
             pygame.quit()
-            subprocess.run(["python", "./code/Main_menu.py"])
+            subprocess.run(["python3", "./code/Main_menu.py"])
         if dieCount < 3:
             dieCount += 1
             
@@ -210,6 +212,8 @@ def redrawGameWindow(direction_up,direction_down,direction_left,direction_right,
 
     # fonction de rafraichissement
 def refresh(self, direction_up,direction_down,direction_left,direction_right, attack, life_state, position = False):
+        map = mapgen.map
+
         # la position de la caméra est la même que le joueur si elle n'est pas précisée
         if not position:
             position = self.player.position

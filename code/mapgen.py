@@ -15,10 +15,7 @@ chunkMap = []
 # modules
 import copy
 import random
-import math
 from nodes import *
-
-print("génération de la map ...", end = '')
 
 # define chunks
 class Chunk:
@@ -30,8 +27,8 @@ class Chunk:
 # fonction de génération de la map
 def GenMap(level):
     global startPoint, endPoint, map, chunkMap
-    nbMapPoints = {"eazy":3, "normal":5, "hard":7}[level]
-    mapNoise = {"eazy":5, "normal":10, "hard":20}[level]
+    nbMapPoints = {"easy":3, "normal":5, "hard":7}[level]
+    mapNoise = {"easy":5, "normal":10, "hard":20}[level]
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
@@ -85,10 +82,6 @@ def GenMap(level):
         if noiseChunk[XorY] + moreOrLess > 0 and noiseChunk[XorY] < [nbChunkX, nbChunkY][XorY]:
             noiseChunk[XorY] = noiseChunk[XorY] + moreOrLess
             wayMap.append(noiseChunk)
-    print("debug sa mère:")
-    print(pointMap)
-    print(wayMap)
-    print(endPoint)
     # définir les types de chunks
     for x in range(nbChunkX):
         for y in range(nbChunkY):
@@ -153,13 +146,3 @@ def GenMap(level):
 
     # ajouter le coffre à la fin
     map[endPoint[0] * nbBlocksX + 4][endPoint[1] * nbBlocksY + 4] = Chest()
-    print([endPoint[0] * nbBlocksX + 4,endPoint[1] * nbBlocksY + 4])
-    print(" fait", end = '\n')
-    print(endPoint)
-    
-
-
-
-
-            
-GenMap()

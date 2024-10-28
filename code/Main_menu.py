@@ -257,10 +257,14 @@ def options_screen(screen):
         slider_music.draw()
         slider_sfx.draw()
         pygame.display.flip()
+
+# lancer le jeu
 def start_game():
     print("Launching the game...")  # Debug
     pygame.quit()
-    subprocess.run(["python", "./code/game.py"])
+    subprocess.run(["python3", "./code/game.py", current_difficulty])
+
+# charger l'écran
 def loading_screen(screen):
     loading_font = pygame.freetype.Font("./fonts/OwreKynge.ttf", 50)
     progress_bar_width = 600

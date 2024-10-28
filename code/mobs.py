@@ -142,12 +142,13 @@ class Guardian(Mobs):
 
 # placer les créatures
 def mobSpawn(level):
+    chunkMap = mapgen.chunkMap
     X = 0
     for chunkLine in chunkMap:
         Y = 0
         for chunk in chunkLine:
-            if chunk.chunkType != "Full":
-                if random.randint(0, 100) <= {"eazy":30, "normal":50, "hard":75}[level] :
+            if chunk.chunkType != "Full" and [X, Y] != mapgen.startPoint:
+                if random.randint(0, 100) <= {"easy":30, "normal":75, "hard":50}[level] :
                     entitiesList.append(Guardian([X * nbBlocksX + nbBlocksX / 2, Y * nbBlocksY + nbBlocksY / 2]))
                 pass
             Y += 1
