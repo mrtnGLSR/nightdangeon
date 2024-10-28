@@ -28,8 +28,10 @@ class Chunk:
 
 
 # fonction de génération de la map
-def GenMap():
+def GenMap(level):
     global startPoint, endPoint, map, chunkMap
+    nbMapPoints = {"eazy":3, "normal":5, "hard":7}[level]
+    mapNoise = {"eazy":5, "normal":10, "hard":20}[level]
 
     # positionnement des chunks sur la map
     for ymap in range(nbChunkY):
