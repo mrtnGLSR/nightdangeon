@@ -66,7 +66,7 @@ class Entity(Solide):
                 # définir le bloque à analyser
                 block = [int({"N":self.position[0],
                               "S":self.position[0],
-                              "E":self.position[0] + i[0], 
+                              "E":self.position[0] + i[0],
                               "O":self.position[0] + i[0]}[direction]) // 1 + j * {"E":1, "O":-1, "N":0, "S":0}[direction], int({"N":self.position[1] + i[1],
                                                                                                                                  "S":self.position[1] + i[1],
                                                                                                                                  "E":self.position[1],

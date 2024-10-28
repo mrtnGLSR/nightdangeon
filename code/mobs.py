@@ -41,7 +41,7 @@ class Mobs(Entity):
     def die(self):
         # Actions à effectuer lors de la mort du mob (ex. : disparition, suppression de la liste des mobs)
         if self in entitiesList:
-            entitiesList.remove(self)
+            self.textureState[0] = "D"
         # Vous pouvez également ajouter des actions comme supprimer le mob de la liste active
     
     #attaque sur le joueur
@@ -105,8 +105,12 @@ class Mobs(Entity):
     
     # mettre à jour l'image
     def updateIMG(self):
+        if self.textureState[0] == "D" and (self.textureState[1] + 1) == len(self.texture[self.textureState[0]]):
+            entitiesList.remove(self)
         if self.mobile:
             # passer à l'animation suivante
+            self.textureState[1] = (self.textureState[1] + 1) % len(self.texture[self.textureState[0]])
+        elif self.textureState[0] == "D":
             self.textureState[1] = (self.textureState[1] + 1) % len(self.texture[self.textureState[0]])
         else:
             # passer ou rester à la première annimation
