@@ -15,7 +15,7 @@ running = True
 RED = (178, 34, 34)
 WHITE = (255, 255, 255)
 game_state = ""
-
+current_difficulty = 'normal'
 
 # Initialisation de Pygame
 pygame.init()
@@ -102,11 +102,6 @@ class GameState(Enum):
     PREGAME = 2
     LOADING = 3
     CREATORS = 4
-    
-
-    
-
-
 
 def scrolling_bg():
     global scroll_x
@@ -205,7 +200,11 @@ def creators_screen(screen):
                 return ui_action
 
         pygame.display.flip()
-
+def set_difficulty(difficulty):
+    global current_difficulty, screen
+    current_difficulty=difficulty
+    loading_screen(screen)
+    
 def options_screen(screen): 
     with open(file_path, 'r') as infile:
         settings = json.load(infile)
@@ -316,9 +315,9 @@ def pregame_screen(screen):
     btn_return = UIElement(center_position=(70, 700), font_size=30, bg_rgb=WHITE, text_rgb=WHITE, text='Return', action=GameState.TITLE)
     Title = UIElement(center_position=(520, 200), font_size=60, bg_rgb=WHITE, text_rgb=WHITE, text='Settings')
     
-    btn_easy = UIElement(center_position=(380, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Easy', action=GameState.LOADING)
-    btn_normal = UIElement(center_position=(520, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Normal', action=GameState.LOADING)
-    btn_hard = UIElement(center_position=(660, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Hard', action=GameState.LOADING)
+    btn_easy = UIElement(center_position=(380, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Easy', action=lambda:set_difficulty('easy'))
+    btn_normal = UIElement(center_position=(520, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Normal', action=lambda:set_difficulty('normal'))
+    btn_hard = UIElement(center_position=(660, 270), font_size=50, bg_rgb=WHITE, text_rgb=WHITE, text='Hard', action=lambda:set_difficulty('hard'))
 
     while running:
         mouse_up = False
