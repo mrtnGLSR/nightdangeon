@@ -54,10 +54,18 @@ class Mobs(Entity):
 
     # Calcule la distance entre le mob et le joueur
     def distance_to_player(self, player_position):
+        # Calcule la distance entre le mob et le joueur
         return ((self.position[0] - player_position[0]) ** 2 + (self.position[1] - player_position[1]) ** 2) ** 0.5
-    
-    # Calcule la direction vers le joueur
+
+    def attack(self, player):
+        # Vérifie si le mob peut attaquer en fonction du temps écoulé
+        current_time = time.time()
+        if current_time - self.last_attack_time >= self.attack_cooldown:
+            player.take_damage(self.attack_power)  # Réduit la santé du joueur
+            self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
+
     def move_towards_player(self, player_position):
+        # Calcule la direction vers le joueur
         x_diff = player_position[0] - self.position[0]
         y_diff = player_position[1] - self.position[1]
         
@@ -140,14 +148,8 @@ for chunkLine in chunkMap:
         Y += 1
     X += 1
 
-
     
 
 
 
-# Création d'une instance de Mob à la position (2, 2)
-#mob_instance = Mob(position=(random.randint(2, 78), random.randint(2, 78)), speed=0.2)
-#while True:  # Boucle infinie pour le mouvement # Pause de 0.5 secondes entre les mouvements
-#    time.sleep(0.5)
-#    mob_instance.move_randomly(player_position)  # Déplace le mob selon la logique définie
-#    print(mob_instance.position)  # Affiche la position actuelle du mob
+

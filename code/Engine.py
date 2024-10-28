@@ -123,3 +123,5 @@ class Player(Entity):
                 self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
             else:
                 print("Attaque en cooldown, veuillez patienter.")
+
+
