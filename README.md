@@ -175,6 +175,9 @@ Visual studio code
 
 Il faut bien choisir ton interpretter python dans ton IDE et voir si tu l'as bien installé
 
+#### Quel fichier dois-je lancer?
+Il faut lancer le Main_menu.py
+
 
 ## 🔗 Documentions Library Links
 * [Pygame](https://www.pygame.org/docs/)
