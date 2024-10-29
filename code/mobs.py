@@ -148,7 +148,7 @@ def mobSpawn(level):
         Y = 0
         for chunk in chunkLine:
             if chunk.chunkType != "Full" and [X, Y] != mapgen.startPoint:
-                if random.randint(0, 100) <= {"easy":30, "normal":75, "hard":50}[level] :
+                if random.randint(0, 100) <= {"easy":30, "normal":75, "hard":100}[level] :
                     entitiesList.append(Guardian([X * nbBlocksX + nbBlocksX / 2, Y * nbBlocksY + nbBlocksY / 2]))
                 pass
             Y += 1
