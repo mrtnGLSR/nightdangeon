@@ -9,8 +9,6 @@ try:
 except:
     pass
 
-print(level)
-
 # from sprite import sprites   # Liste ou collection des sprites (objets visuels animés ou statiques)
 # from map import TileKind, Map # TileKind : Définit les types de tuiles (sol, mur, etc.)
 # Map : Définit la carte ou niveau de jeu
