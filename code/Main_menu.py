@@ -54,10 +54,10 @@ background_image = pygame.image.load("./img/bg.png").convert()
 bg_width = background_image.get_width()
 scroll_x = 0
 scroll_speed = 0.03
-
+font = pygame.freetype.Font(("." + "/fonts/OwreKynge.ttf"), 30) # creation font variable
 
 # functions
-def create_surface_with_text(text,font_size, text_rgb, bg_rgb):
+def create_surface_with_text(text,font_size, text_rgb, bg_rgb, font):
     font = pygame.freetype.Font(("." + "/fonts/OwreKynge.ttf"), font_size) # creation font variable
     _, text_rect = font.render(text=text, fgcolor=text_rgb)     # Render the text to get its dimensions
     surface = pygame.Surface((text_rect.width, text_rect.height), pygame.SRCALPHA) # Create a surface with dimensions to fit the text and enable transparency
@@ -68,8 +68,8 @@ def create_surface_with_text(text,font_size, text_rgb, bg_rgb):
 class UIElement(Sprite):
     def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
         self.mouse_over = False
-        default_image = create_surface_with_text(text, font_size, text_rgb, bg_rgb)
-        highlight_image = create_surface_with_text(text, font_size * 1.2, text_rgb, bg_rgb)
+        default_image = create_surface_with_text(text, font_size, text_rgb, bg_rgb, font)
+        highlight_image = create_surface_with_text(text, font_size * 1.2, text_rgb, bg_rgb, font)
         self.images = [default_image, highlight_image]
         self.rects = [default_image.get_rect(center=center_position), 
                       highlight_image.get_rect(center=center_position)]

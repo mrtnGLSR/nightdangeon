@@ -119,10 +119,7 @@ class Player(Entity):
         if distance_to_mob <= self.attack_range:
             # Vérifie si le cooldown est respecté
             if current_time - self.last_attack_time >= self.attack_cooldown:
-                print("Le joueur attaque le mob !")
                 mob.take_damage(self.attack_power)  # Inflige des dégâts au mob
                 self.last_attack_time = current_time  # Met à jour le dernier moment d'attaque
-            else:
-                print("Attaque en cooldown, veuillez patienter.")
 
 
